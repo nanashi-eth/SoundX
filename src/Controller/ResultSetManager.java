@@ -9,94 +9,81 @@ import java.sql.SQLException;
 
 public abstract class ResultSetManager {
 
-    public boolean isEmpty(ResultSet rs) throws MyException {
+    protected void handleSQLException(int errorCode) throws MyException {
+        ErrorLogger.getInstance().logError(errorCode);
+        throw new MyException(errorCode);
+    }
+
+    protected void handleDeleteSQLException(SQLException ex) throws MyException {
+        int errorCode = AppErrors.SQL_DELETE_ERROR;
+        ErrorLogger.getInstance().logError(errorCode);
+        throw new MyException(errorCode);
+    }
+
+    protected boolean moveResultSetCursor(ResultSet rs, ResultSetMovement movement) throws MyException {
         try {
-            if (rs.next()) {
-                rs.beforeFirst();
-                return false;
-            } else {
-                return true;
+            switch (movement) {
+                case FIRST:
+                    return rs.first();
+                case LAST:
+                    return rs.last();
+                case NEXT:
+                    return rs.next();
+                case PREVIOUS:
+                    return rs.previous();
+                default:
+                    return false;
             }
         } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
+            handleSQLException(101);
+            return false;
         }
     }
 
-    public boolean previousResult(ResultSet rs) throws MyException {
+    protected boolean checkResultSetPosition(ResultSet rs, ResultSetPosition position) throws MyException {
         try {
-            return rs.previous();
+            switch (position) {
+                case IS_FIRST:
+                    return rs.isFirst();
+                case IS_LAST:
+                    return rs.isLast();
+                default:
+                    return false;
+            }
         } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
+            handleSQLException(101);
+            return false;
         }
     }
 
-    public boolean nextResult(ResultSet rs) throws MyException {
-        try {
-            return rs.next();
-        } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
-        }
-    }
-
-    public boolean firstResult(ResultSet rs) throws MyException {
-        try {
-            return rs.first();
-        } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
-        }
-    }
-
-    public boolean lastResult(ResultSet rs) throws MyException {
-        try {
-            return rs.last();
-        } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
-        }
-    }
-
-    public boolean isLast(ResultSet rs) throws MyException {
-        try {
-            return rs.isLast();
-        } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
-        }
-    }
-
-    public boolean isFirst(ResultSet rs) throws MyException {
-        try {
-            return rs.isFirst();
-        } catch (SQLException ex) {
-            int errorCode = AppErrors.INVALID_RECORD_ID;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
-        }
-    }
-
-    public void delete(ResultSet rs) throws MyException{
+    protected void deleteCurrentRow(ResultSet rs) throws MyException {
         try {
             rs.deleteRow();
             ConnectionDB.getConnection().commit();
         } catch (SQLException ex) {
-            int errorCode = AppErrors.SQL_DELETE_ERROR;
-            ErrorLogger.getInstance().logError(errorCode);
-            throw new MyException(errorCode);
+            handleDeleteSQLException(ex);
         }
     }
 
-    public void quit(ResultSet rs, PreparedStatement st){
-        rs = null;
-        st = null;
+    protected void closeResultSetAndStatement(ResultSet rs, PreparedStatement st) {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            // Log or handle the exception as needed
+        }
+    }
+
+    // Enumerations for movement and position of ResultSet
+    protected enum ResultSetMovement {
+        FIRST, LAST, NEXT, PREVIOUS
+    }
+
+    protected enum ResultSetPosition {
+        IS_FIRST, IS_LAST
     }
 }

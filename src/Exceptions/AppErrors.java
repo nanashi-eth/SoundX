@@ -9,6 +9,7 @@ public class AppErrors {
     public static final int INVALID_CREDENTIALS = 201;
     public static final int USER_NOT_FOUND = 202;
     public static final int AUTHOR_NOT_FOUND = 203;
+    public static final int NO_PLAYLISTS = 209;
     public static final int UNAUTHORIZED_ACCESS = 204;
 
     public static final int INSERT_ERROR = 205;
@@ -67,6 +68,9 @@ public class AppErrors {
                 break;
             case UNEXPECTED_ERROR:
                 errorMessage += "error inesperado";
+                break;
+            case NO_PLAYLISTS:
+                errorMessage += "aun no hay playlists";
                 break;
             default:
                 errorMessage += "DESCONOCIDO";

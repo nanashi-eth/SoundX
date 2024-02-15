@@ -1,14 +1,8 @@
 package UI;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
+import Utils.ImageManager;
 
 public class SoundXFrame extends JFrame {
     public SoundXFrame() {
@@ -21,16 +15,8 @@ public class SoundXFrame extends JFrame {
         UIManager.put("OptionPane.messageForeground", Color.WHITE); // Color del texto en los JOptionPane
         // Crear el panel de inicio de sesión
         LoginShadowPanel loginPanel = new LoginShadowPanel(this);
-
-        // Cargar la imagen
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File(System.getProperty("user.dir") + "/src/assets/images/background.jpg"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ImageIcon icon = new ImageIcon(img);
-        Image image = icon.getImage().getScaledInstance(getWidth(), getHeight(),  Image.SCALE_SMOOTH);
+        
+        Image image = ImageManager.cargarImagen("background.jpg", getWidth(), getHeight());
 
         // Crear el panel con la imagen dividida
         ImageBackgroundPanel diagonalImagePanel = new ImageBackgroundPanel(image);

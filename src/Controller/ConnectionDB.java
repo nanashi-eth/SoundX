@@ -11,9 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDB {
-    private static final String URL = "jdbc:mysql://172.25.188.75:3306/practica06";
-    private static final String USER = "root";
-    private static final String PASSWORD = "nanashi";
+    private static final String URL = "jdbc:mysql://localhost:3306/practica06";
+    private static final String USER = "admin";
+    private static final String PASSWORD = "password";
     
     private static Connection connection;
     
@@ -25,8 +25,7 @@ public class ConnectionDB {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Establish connection
-            connection = DriverManager.getConnection(URL + "?user="
-                    + USER + "&password=" + PASSWORD + "&useSSL=false");
+            connection = DriverManager.getConnection(URL + "?allowPublicKeyRetrieval=true" + "&useSSL=false", USER, PASSWORD);
             connection.setAutoCommit(false);
 
         } catch (ClassNotFoundException | SQLException e) {

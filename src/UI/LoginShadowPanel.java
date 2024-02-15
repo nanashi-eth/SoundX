@@ -1,20 +1,24 @@
 package UI;
 
+import Controller.UserManager;
+import Exceptions.MyException;
 import Utils.FontManager;
 import Utils.RequestFocusListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginShadowPanel extends RoundedShadowPanel {
     private PlaceholderTextField usernameField;
     private PlaceholderPasswordField passwordField;
+    CustomButton register, login;
     private Font title = FontManager.cargarFuente("spotify-bold.otf", 24f);
     private Font text = FontManager.cargarFuente("spotify.otf", 13f);
-    private JFrame parentFrame;
+    private SoundXFrame parentFrame;
 
-    public LoginShadowPanel(JFrame parentFrame) {
+    public LoginShadowPanel(SoundXFrame parentFrame) {
         this.parentFrame = parentFrame;
         setLayout(new GridBagLayout()); // Establecer el diseño como GridBagLayout
         GridBagConstraints gbc = new GridBagConstraints();
@@ -55,19 +59,47 @@ public class LoginShadowPanel extends RoundedShadowPanel {
         // Agregar botones personalizados en la parte inferior
         gbc.gridy++;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(createCustomButton("Iniciar Sesión"), gbc);
+        login = createCustomButton("Iniciar Sesión");
+        add(login, gbc);
         gbc.gridy++;
-        CustomButton register = createCustomButton("Registrarse");
+        register = createCustomButton("Registrarse");
         add(register, gbc);
         parentFrame.getRootPane().setDefaultButton(register);
         register.addAncestorListener(new RequestFocusListener(false));
         register.requestFocus();
         register.requestFocusInWindow();
-        register.addActionListener(e -> clickListener(e));
-    }
-
-    private void clickListener(ActionEvent e) {
+        login.addActionListener(e -> login());
         
+    }
+    
+    
+
+    private void registrar(ActionListener e) {
+        register.addActionListener(e);
+    }
+    
+    public void login(){
+        try {
+            // Crear una instancia de UserManager
+            System.out.println(getUsername().toLowerCase().trim());
+            UserManager userManager = new UserManager(getUsername().toLowerCase().trim());
+
+            // Llamar al método validateUsuario con los campos de texto
+            boolean isValid = userManager.validateUsuario(getUsername().toLowerCase().trim(), getPassword().toLowerCase().trim());
+
+            // Si la validación es exitosa, puedes realizar acciones adicionales aquí
+            if (isValid) {
+                // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
+                parentFrame.mostrarMensaje("Inicio de sesión exitoso");
+
+                // Aquí podrías cambiar a otra ventana o realizar otras acciones necesarias
+            } else {
+                // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
+                parentFrame.mostrarError("Usuario o contraseña incorrectos");
+            }
+        } catch (MyException ex) {
+            parentFrame.mostrarError(ex.getMessage());
+        }
     }
 
     // Método para crear un botón personalizado

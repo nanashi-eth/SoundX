@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS AUTOR (
-    autorID INT PRIMARY KEY,
+    autorID INT AUTO_INCREMENT PRIMARY KEY,
     nomAutor VARCHAR(50) NOT NULL
 );
+
 CREATE TABLE IF NOT EXISTS CANCION (
-    cancionID INT PRIMARY KEY,
+    cancionID INT AUTO_INCREMENT PRIMARY KEY,
     nombreCancion VARCHAR(50),
     fecha DATE,
     autorID INT,
@@ -11,17 +12,21 @@ CREATE TABLE IF NOT EXISTS CANCION (
     duracion FLOAT,
     FOREIGN KEY (autorID) REFERENCES AUTOR(autorID)
 );
+
 CREATE TABLE IF NOT EXISTS USUARIO (
-    userID INT PRIMARY KEY,
-    nombreUsuario VARCHAR(50) NOT NULL
+    userID INT AUTO_INCREMENT PRIMARY KEY,
+    nombreUsuario VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(50) NOT NULL
 );
+
 CREATE TABLE IF NOT EXISTS PLAYLIST (
-    playlistID INT PRIMARY KEY,
+    playlistID INT AUTO_INCREMENT PRIMARY KEY,
     nombrePlaylist VARCHAR(50),
     userID INT,
     minutosTotales FLOAT,
     FOREIGN KEY (userID) REFERENCES USUARIO(userID)
 );
+
 CREATE TABLE IF NOT EXISTS PLAYLIST_CANCION (
     playlistID INT,
     cancionID INT,
@@ -29,16 +34,17 @@ CREATE TABLE IF NOT EXISTS PLAYLIST_CANCION (
     FOREIGN KEY (playlistID) REFERENCES PLAYLIST(playlistID),
     FOREIGN KEY (cancionID) REFERENCES CANCION(cancionID)
 );
+
 -- 5 autores
-INSERT IGNORE INTO AUTOR (autorID, nomAutor)
-VALUES (1, 'Eladio Carrion'),
-    (2, 'Eminem'),
-    (3, 'Drake'),
-    (4, 'Bad Bunny'),
-    (5, 'Kaze');
+INSERT IGNORE INTO AUTOR (nomAutor)
+VALUES ('Eladio Carrion'),
+    ('Eminem'),
+    ('Drake'),
+    ('Bad Bunny'),
+    ('Kaze');
+
 -- Canciones
 INSERT IGNORE INTO CANCION (
-        cancionID,
         nombreCancion,
         fecha,
         autorID,
@@ -46,127 +52,111 @@ INSERT IGNORE INTO CANCION (
         duracion
     )
 VALUES (
-        1,
         'Coco Chanel',
         '2024-01-20',
         1,
-        'imagen_coco_chanel.jpg',
+        'Coco.jpg',
         4.5
     ),
     (
-        2,
         'Kemba Walker',
         '2024-01-21',
         1,
-        'imagen_kemba_walker.jpg',
+        'Kemba.jpg',
         3.2
     ),
     (
-        3,
         'Si la calle llama',
         '2024-01-22',
         1,
-        'imagen_si_la_calle_llama.jpg',
+        'SiLaCalle.jpg',
         5.1
     ),
     (
-        4,
         'Without Me',
         '2024-01-20',
         2,
-        'imagen_without_me.jpg',
+        'WithoutMe.jpg',
         4.8
     ),
     (
-        5,
         'Godzilla',
         '2024-01-21',
         2,
-        'imagen_godzilla.jpg',
+        'Godzilla.jpg',
         5.7
     ),
     (
-        6,
         'Lose Yourself',
         '2024-01-22',
         2,
-        'imagen_love_yourself.jpg',
+        'LoseYourself.jpg',
         3.4
     ),
     (
-        7,
         'One Dance',
         '2024-01-20',
         3,
-        'imagen_one_dance.jpg',
+        'OneDance.jpg',
         3.9
     ),
     (
-        8,
         'Too Good',
         '2024-01-21',
         3,
-        'imagen_too_good.jpg',
+        'OneDance.jpg',
         4.2
     ),
     (
-        9,
         'Hotline Bling',
         '2024-01-22',
         3,
-        'imagen_hotline_bling.jpg',
+        'OneDance.jpg',
         5.3
     ),
     (
-        10,
         'A Tu Merced',
         '2024-01-20',
         4,
-        'imagen_a_tu_merced.jpg',
+        'ATuMerced.jpg',
         4.6
     ),
     (
-        11,
         'Amorfoda',
         '2024-01-21',
         4,
-        'imagen_amorfoda.jpg',
+        'Amorfoda.jpg',
         3.9
     ),
     (
-        12,
         'Soy Peor',
         '2024-01-22',
         4,
-        'imagen_soy_peor.jpg',
+        'SoyPeor.jpg',
         5.5
     ),
     (
-        13,
         'Cómete Mi Éxito',
         '2024-01-20',
         5,
-        'imagen_comete_mi_exito.jpg',
+        'CometeMiExito.jpg',
         4.3
     ),
     (
-        14,
         'Modo Turbio',
         '2024-01-21',
         5,
-        'imagen_modo_turbio.jpg',
+        'ModoTurbio.jpg',
         3.7
     ),
     (
-        15,
         '4 ROSES',
         '2024-01-22',
         5,
-        'imagen_4_roses.jpg',
+        '4Roses.jpg',
         5.6
     ),
     (
-        16,
         'Sigo Trabajando',
         '2024-01-23',
         1,
@@ -174,7 +164,6 @@ VALUES (
         4.8
     ),
     (
-        17,
         'Rap God',
         '2024-01-24',
         2,
@@ -182,7 +171,6 @@ VALUES (
         6.2
     ),
     (
-        18,
         'In My Feelings',
         '2024-01-25',
         3,
@@ -190,7 +178,6 @@ VALUES (
         4.5
     ),
     (
-        19,
         'La Noche De Los Dos',
         '2024-01-26',
         4,
@@ -198,7 +185,6 @@ VALUES (
         5.1
     ),
     (
-        20,
         'Déjate Llevar',
         '2024-01-27',
         5,
@@ -206,7 +192,6 @@ VALUES (
         3.7
     ),
     (
-        21,
         'Mockingbird',
         '2024-01-28',
         2,
@@ -214,7 +199,6 @@ VALUES (
         4.3
     ),
     (
-        22,
         'God''s Plan',
         '2024-01-29',
         3,
@@ -222,7 +206,6 @@ VALUES (
         5.6
     ),
     (
-        23,
         'Goteo',
         '2024-01-30',
         1,
@@ -230,7 +213,6 @@ VALUES (
         3.9
     ),
     (
-        24,
         'La Noche De Los Dos',
         '2024-01-31',
         4,
@@ -238,35 +220,36 @@ VALUES (
         4.1
     ),
     (
-        25,
         'Darell',
         '2024-02-01',
         5,
         'imagen_darell.jpg',
         4.9
     );
+
 -- Usuarios
-INSERT IGNORE INTO USUARIO (userID, nombreUsuario)
-VALUES (1, 'usuario1'),
-    (2, 'usuario2'),
-    (3, 'usuario3'),
-    (4, 'usuario4'),
-    (5, 'usuario5');
+INSERT IGNORE INTO USUARIO (nombreUsuario, password)
+VALUES ('juanperez', 'contraseña1'),
+    ('mariagonzalez', 'contraseña2'),
+    ('carloslopez', 'contraseña3'),
+    ('lauramartinez', 'contraseña4'),
+    ('davidgarcia', 'contraseña5');
+
 -- Playlists
 INSERT IGNORE INTO PLAYLIST (
-        playlistID,
         nombrePlaylist,
         userID,
         minutosTotales
     )
-VALUES (1, 'Canciones Tristes', 1, 21.8),
-    (2, 'Rap', 2, 23.5),
-    (3, 'Pop', 3, 19.9),
-    (4, 'Trap', 3, 22.6),
-    (5, 'Latino', 4, 21.8),
-    (6, 'Reggaeton', 2, 25.5),
-    (7, 'Bachata', 5, 19.3),
-    (8, 'Rock', 1, 24.7);
+VALUES ('Canciones Tristes', 1, 21.8),
+    ('Rap', 2, 23.5),
+    ('Pop', 3, 19.9),
+    ('Trap', 3, 22.6),
+    ('Latino', 4, 21.8),
+    ('Reggaeton', 2, 25.5),
+    ('Bachata', 5, 19.3),
+    ('Rock', 1, 24.7);
+
 -- Relaciones entre playlist y canciones
 INSERT IGNORE INTO PLAYLIST_CANCION (playlistID, cancionID)
 VALUES (1, 4),

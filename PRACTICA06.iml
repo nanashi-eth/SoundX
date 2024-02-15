@@ -36,5 +36,6 @@
     </orderEntry>
     <orderEntry type="library" name="mysql.connector.java" level="project" />
     <orderEntry type="library" name="mybatis" level="project" />
+    <orderEntry type="library" name="javax.persistence.api" level="project" />
   </component>
 </module>
