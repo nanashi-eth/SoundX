@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 
 import javax.swing.*;
 import java.awt.*;

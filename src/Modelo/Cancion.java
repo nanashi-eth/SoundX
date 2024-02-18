@@ -16,8 +16,7 @@ public class Cancion {
     @Column(name = "fecha")
     private Date fecha;
 
-    @Column(name = "autorID")
-    private int autorID;
+    private String autor;
 
     @Column(name = "imagen")
     private String imagen;
@@ -25,10 +24,10 @@ public class Cancion {
     @Column(name = "duracion")
     private float duracion;
 
-    public Cancion(String nombreCancion, Date fecha, int autorID, String imagen, float duracion) {
+    public Cancion(String nombreCancion, Date fecha, String autor, String imagen, float duracion) {
         this.nombreCancion = nombreCancion;
         this.fecha = fecha;
-        this.autorID = autorID;
+        this.autor = autor;
         this.imagen = imagen;
         this.duracion = duracion;
     }
@@ -59,12 +58,12 @@ public class Cancion {
         this.fecha = fecha;
     }
 
-    public int getAutorID() {
-        return autorID;
+    public String getAutor() {
+        return autor;
     }
 
-    public void setAutorID(int autorID) {
-        this.autorID = autorID;
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 
     public String getImagen() {

@@ -31,7 +31,6 @@ public class UserManager extends ResultSetManager implements Queryable {
             ConnectionDB.openConnection();
             st = ConnectionDB.getConnection().prepareStatement(GET_USER_BY_NAME, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             st.setString(1, username);
-            System.out.println(username);
             rs = st.executeQuery();
             // Mover al primer resultado del ResultSet
             moveResultSetCursor(rs, ResultSetMovement.FIRST);
@@ -43,7 +42,6 @@ public class UserManager extends ResultSetManager implements Queryable {
     public int getUserIdByName(String username) throws MyException {
         int userId = -1; // Valor por defecto si no se encuentra el usuario
         try {
-            ConnectionDB.openConnection();
             PreparedStatement getUserIdStmt = ConnectionDB.getConnection().prepareStatement(GET_USER_ID_BY_NAME);
             getUserIdStmt.setString(1, username);
             ResultSet userIdResultSet = getUserIdStmt.executeQuery();
@@ -58,7 +56,6 @@ public class UserManager extends ResultSetManager implements Queryable {
 
     public boolean usernameExists(String username) throws MyException {
         try {
-            ConnectionDB.openConnection();
             PreparedStatement usernameExistsStmt = ConnectionDB.getConnection().prepareStatement(USER_EXISTS_BY_NAME);
             usernameExistsStmt.setString(1, username);
             ResultSet usernameExistsResultSet = usernameExistsStmt.executeQuery();
@@ -109,7 +106,6 @@ public class UserManager extends ResultSetManager implements Queryable {
         int userId = getUserIdByName(username);
         List<Playlist> playlists = new ArrayList<>();
         try {
-            ConnectionDB.openConnection();
             st = ConnectionDB.getConnection().prepareStatement(GET_ALL_PLAYLISTS_BY_USER);
             st.setString(1, String.valueOf(userId));
             rs = st.executeQuery();

@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +13,7 @@ public class IconButton extends JButton {
         // Configurar el texto del botón
         super(SPACER + text);
         addActionListener(actionListener);
+        
 
         // Configurar las fuentes
         Font font = Utils.FontManager.cargarFuente("icon.otf", 13f).deriveFont(Font.PLAIN, ICON_SIZE);
@@ -36,11 +37,9 @@ public class IconButton extends JButton {
         // Quitar el borde
         setBorderPainted(false);
 
-        // Obtener el color de fondo predeterminado de UIManager
-        Color backgroundColor = getBackground();
-
         // Configurar el color de fondo del botón
-        setBackground(backgroundColor.brighter().darker());
+        setBackground(new Color(18, 18, 18));
+        setForeground(Color.WHITE);
 
         // Configurar el diseño con un JLabel para el icono en la posición WEST (izquierda)
         setLayout(new BorderLayout());
@@ -48,10 +47,14 @@ public class IconButton extends JButton {
         ui = new CustomButtonUI();
         // Aplicar ButtonUI personalizado
         setUI(ui);
+        // Configurar el PreferredSize y MinimumSize
+        Dimension preferredSize = new Dimension(200, getPreferredSize().height);
+        Dimension minimumSize = new Dimension(50, getMinimumSize().height);
+        setPreferredSize(preferredSize);
+        setMinimumSize(minimumSize);
     }
     
     public void paintLine(IconButton b) {
-        System.out.println(this.equals(b));
         if (this.equals(b)) {
             ui.setShouldPaintHoverLineAndRepaint(true);
             repaint();

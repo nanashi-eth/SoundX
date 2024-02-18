@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -7,21 +7,31 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class PlaceholderPasswordField extends JPasswordField {
+public class PlaceholderTextField extends JTextField {
     private String placeholder;
+    private final JLabel iconLabel;
     private Font font;
     private Color containerBackground;
 
-    public PlaceholderPasswordField(Container parent, int columns) {
+    public PlaceholderTextField(Container parent, String text, int columns) {
         super(columns);
-        this.placeholder = "Password";
+//        initializeFont();
+        this.placeholder = text;
+        this.iconLabel = new JLabel();
+        this.iconLabel.setFont(font);
+
         setupUI(parent);
         setupEventListeners();
     }
 
+//    private void initializeFont() {
+//        font = Utils.FontManager.getCustomIconFont().deriveFont(Font.PLAIN, 13);
+//    }
+
     private void setupUI(Container parent) {
         setLayout(new BorderLayout());
         setOpaque(false);
+        add(iconLabel, BorderLayout.EAST);
 
         // Eliminar el borde redondeado y utilizar una línea sólida en la parte inferior
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE));
@@ -69,9 +79,8 @@ public class PlaceholderPasswordField extends JPasswordField {
 
     private void handleFocus(boolean hasFocus) {
         setBackground(hasFocus ? containerBackground.darker().brighter() : containerBackground);
-        if (String.valueOf(getPassword()).equals(placeholder)) {
+        if (getText().equals(placeholder)) {
             setText(hasFocus ? "" : placeholder);
-            setEchoChar(hasFocus ? '•' : '\0');
         } else {
             setForeground(hasFocus ? Color.WHITE : Color.GRAY);
         }
@@ -80,7 +89,7 @@ public class PlaceholderPasswordField extends JPasswordField {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (String.valueOf(getPassword()).isEmpty() && !hasFocus()) {
+        if (getText().isEmpty() && !hasFocus()) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g2.setColor(Color.GRAY);
@@ -89,12 +98,32 @@ public class PlaceholderPasswordField extends JPasswordField {
         }
     }
 
+    public void addExternalDocumentListener(DocumentListener listener) {
+        getDocument().addDocumentListener(listener);
+    }
+
     // Método para cambiar el color de fondo
     public void setCustomBackgroundColor(Color color) {
         setBackground(color);
         repaint(); // Es posible que necesites repintar el componente para que los cambios sean visibles
     }
 
+    public void valid() {
+        this.iconLabel.setFont(font);
+        iconLabel.setText("\uf14a");
+        iconLabel.setForeground(new Color(255, 255, 255));
+    }
+
+    public void invalid() {
+        iconLabel.setText("");
+        if (!placeholder.equals(getText())) {
+            setForeground(new Color(204, 0, 0));
+        }
+    }
+
+    public void reset() {
+        iconLabel.setText("");
+    }
     public void setPlaceholder(String newPlaceholder) {
         placeholder = newPlaceholder;
         setText(placeholder);
@@ -107,4 +136,3 @@ public class PlaceholderPasswordField extends JPasswordField {
         return placeholder;
     }
 }
-

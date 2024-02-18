@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS CANCION (
 CREATE TABLE IF NOT EXISTS USUARIO (
     userID INT AUTO_INCREMENT PRIMARY KEY,
     nombreUsuario VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(50) NOT NULL
+    password VARCHAR(50) NOT NULL, 
+    imagen VARCHAR(250)
 );
 
 CREATE TABLE IF NOT EXISTS PLAYLIST (
@@ -228,12 +229,12 @@ VALUES (
     );
 
 -- Usuarios
-INSERT IGNORE INTO USUARIO (nombreUsuario, password)
-VALUES ('juanperez', 'contraseña1'),
-    ('mariagonzalez', 'contraseña2'),
-    ('carloslopez', 'contraseña3'),
-    ('lauramartinez', 'contraseña4'),
-    ('davidgarcia', 'contraseña5');
+INSERT IGNORE INTO USUARIO (nombreUsuario, password, imagen)
+VALUES ('juanperez', 'contraseña1', '1.jpg'),
+       ('mariagonzalez', 'contraseña', '2.jpg'),
+       ('carloslopez', 'contraseña3', '3.jpg'),
+       ('lauramartinez', 'contraseña', '4.jpg'),
+       ('davidgarcia', 'contraseña5', '5.jpg');
 
 -- Playlists
 INSERT IGNORE INTO PLAYLIST (

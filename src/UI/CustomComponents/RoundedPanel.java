@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,6 +6,10 @@ import java.awt.*;
 public class RoundedPanel extends JPanel {
     private static final int BORDER_RADIUS = 20;
     private static final int PADDING = 2;
+    
+    public RoundedPanel(LayoutManager layout){
+        super(layout);
+    };
 
     @Override
     protected void paintComponent(Graphics g) {

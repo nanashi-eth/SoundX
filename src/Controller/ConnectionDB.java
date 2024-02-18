@@ -9,6 +9,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ConnectionDB {
     private static final String URL = "jdbc:mysql://localhost:3306/practica06";
@@ -67,6 +68,23 @@ public class ConnectionDB {
             int errorCode = AppErrors.DATABASE_OPEN_ERROR;
             ErrorLogger.getInstance().logError(errorCode);
             throw new MyException(errorCode);
+        }
+    }
+    
+    public static void deleteDB (){
+        try {
+            openConnection();
+        } catch (MyException e) {
+            throw new RuntimeException(e);
+        }
+        Statement stmt = null;
+        try {
+            stmt = getConnection().createStatement();
+            String sql = "DROP TABLE IF EXISTS PLAYLIST_CANCION, PLAYLIST, USUARIO, CANCION, AUTOR;";
+            stmt.executeUpdate(sql);
+            cerrarConexion();
+        } catch (SQLException | MyException e) {
+            throw new RuntimeException(e);
         }
     }
     

@@ -1,18 +1,38 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowListener;
+
+import Controller.Controller;
+import UI.CustomComponents.ImageBackgroundPanel;
+import Utils.FontManager;
 import Utils.ImageManager;
 
 public class SoundXFrame extends JFrame {
+    private Controller control;
     public SoundXFrame() {
         setTitle("SoundX");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(800, 600); // Tamaño inicial de la ventana
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         // Cambiar el color por defecto de los JPanel a gris muy oscuro
         UIManager.put("Panel.background", new Color(0, 0, 0));
         UIManager.put("OptionPane.messageForeground", Color.WHITE); // Color del texto en los JOptionPane
+        UIManager.put( "Component.focusWidth", 0 );
+        UIManager.put( "Button.default.borderWidth", 2 );
+        UIManager.put( "TitlePane.foreground", new ColorUIResource(255, 255, 255) );
+        UIManager.put( "TitlePane.background", new ColorUIResource(0, 0, 0) );
+        UIManager.put( "TitlePane.centerTitle", true );
+        UIManager.put( "TitlePane.font", FontManager.cargarFuente("spotify-bold.otf", 13f));
+        UIManager.put( "Button.default.focusedBorderColor", new ColorUIResource(255, 255, 255) );
+        UIManager.put( "MenuBar.selectionBackground", new ColorUIResource(22, 22, 22));
+        UIManager.put( "PopupMenu.background", new ColorUIResource(22, 22, 22));
+        UIManager.put( "PopupMenu.foreground", new ColorUIResource(255, 255, 255));
+        getRootPane().setBackground(new Color(0, 0, 0));
+        
         // Crear el panel de inicio de sesión
         LoginShadowPanel loginPanel = new LoginShadowPanel(this);
         
@@ -29,10 +49,22 @@ public class SoundXFrame extends JFrame {
         gbc.gridy = 0;
         getContentPane().add(loginPanel, gbc);
         getContentPane().setBackground(new Color(0, 0, 0));
-
+        
+        control = new Controller(this, loginPanel);
         setVisible(true);
     }
 
+    
+    public void exit(WindowAdapter listener) {
+        addWindowListener(listener);
+    }
+    
+    public void changePanel(){
+        SplitPane pane = new SplitPane();
+        setContentPane(pane);
+        repaint();
+        revalidate();
+    }
     public void mostrarSidebar() {
         getContentPane().removeAll();
         getContentPane().add(new SplitPane(), BorderLayout.WEST);

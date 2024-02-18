@@ -17,8 +17,15 @@ public class ImageManager {
     }
     
     public static Image cargarImagen(String rutaImagen, int width, int height, boolean cover) {
-        rutaImagen = System.getProperty("user.dir") + "/src/Data/Cover/" + rutaImagen;
-        return getImage(rutaImagen, width, height);
+        String ruta = System.getProperty("user.dir") + "/src/Data/";
+        String endpoint;
+        if (cover) {
+            endpoint = "Cover/" + rutaImagen;
+        }else{
+            endpoint = "Profile/" + rutaImagen;
+        }
+        ruta += endpoint;
+        return getImage(ruta, width, height);
     }
 
     private static Image getImage(String rutaImagen, int width, int height) {
@@ -37,8 +44,8 @@ public class ImageManager {
 
     public static Image cargarCover(String rutaImagen) {
         // Tamaño predeterminado para la portada
-        int width = 200;
-        int height = 200;
+        int width = 40;
+        int height = 40;
 
         // Intenta cargar la imagen especificada
         Image imagen = cargarImagen(rutaImagen, width, height, true);

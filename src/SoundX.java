@@ -1,4 +1,5 @@
 import Controller.ConnectionDB;
+import Controller.Controller;
 import Exceptions.AppErrors;
 import Exceptions.ErrorLogger;
 import Exceptions.MyException;
@@ -24,7 +25,6 @@ public class SoundX {
                 // Ejecuta el script SQL desde el archivo especificado
                 ConnectionDB.executeScript();
             } catch (MyException e) {
-                e.printStackTrace();
                 ErrorLogger.getInstance().logError(AppErrors.DATABASE_OPEN_ERROR);
                 ventana.mostrarError(e.getMessage());
             }

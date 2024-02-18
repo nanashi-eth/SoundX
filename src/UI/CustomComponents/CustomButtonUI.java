@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class CustomButtonUI extends BasicButtonUI {
-    private static final int BUTTON_WIDTH = 150;
+    private static final int BUTTON_WIDTH = 198;
     private static final int BUTTON_HEIGHT = 30;
     private static final int HOVER_LINE_HEIGHT = 2;
-    private static final int BORDER_RADIUS = 15; 
+    private static final int BORDER_RADIUS = 10; 
     private boolean pressed = false;
 
     @Override
@@ -46,14 +46,14 @@ public class CustomButtonUI extends BasicButtonUI {
     }
 
     private RoundRectangle2D createRoundRectangle(int width, int height) {
-        return new RoundRectangle2D.Float(0, 0, width, height, BORDER_RADIUS, BORDER_RADIUS);
+        return new RoundRectangle2D.Float(2, 1, width - 4, height , BORDER_RADIUS, BORDER_RADIUS);
     }
 
     private void paintButtonBackground(AbstractButton button, ButtonModel model, Graphics2D g2d, RoundRectangle2D shape) {
         if (model.isPressed()) {
             g2d.setColor(button.getBackground().brighter());
         } else if (model.isRollover()) {
-            g2d.setColor(button.getBackground().darker());
+            g2d.setColor(button.getBackground().brighter());
         } else {
             g2d.setColor(button.getBackground());
         }

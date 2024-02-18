@@ -1,13 +1,20 @@
 package UI;
 
+import UI.CustomComponents.MyScrollPane;
+import UI.CustomComponents.RoundedPanel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SplitPane extends JSplitPane {
+    private JPanel wrapperPanel;
+    private MyScrollPane customScrollPane;
     public SplitPane() {
+        setBackground(Color.BLACK);
         SideBar sideBar = new SideBar();
-
-        MyScrollPane customScrollPane = new MyScrollPane(){
+        customScrollPane = new MyScrollPane(){
             @Override
             public Dimension getMinimumSize()
             {
@@ -16,14 +23,15 @@ public class SplitPane extends JSplitPane {
                 return d;
             }
         };
-        DefaultListModel<String> empleadosListModel = customScrollPane.getListModel();
-        empleadosListModel.addElement("Jose");
-        empleadosListModel.addElement("Antonio");
-        empleadosListModel.addElement("Jesus");
+        DefaultListModel<String[]> empleadosListModel = customScrollPane.getListModel();
+        String [] hola = {"4Roses.jpg", "Jose", "Antonio", "Jesus"};
+        empleadosListModel.addElement(hola);
+        empleadosListModel.addElement(hola);
+        empleadosListModel.addElement(hola);
         // Añade más elementos si es necesario
 
         // Configura el panel wrapper
-        JPanel wrapperPanel = new JPanel(new BorderLayout());
+        wrapperPanel = new RoundedPanel(new BorderLayout());
         wrapperPanel.add(customScrollPane, BorderLayout.CENTER);
 
         // Configura el JSplitPane
@@ -31,37 +39,5 @@ public class SplitPane extends JSplitPane {
         setDividerLocation(200);
         setLeftComponent(sideBar);
         setRightComponent(wrapperPanel);
-    }
-
-    private JPanel getjPanel() {
-        MyScrollPane customScrollPane = new MyScrollPane(){
-            @Override
-            public Dimension getMinimumSize()
-            {
-                Dimension d = getSize();
-                d.width = 600;
-                return d;
-            }
-        };
-        DefaultListModel<String> empleadosListModel = customScrollPane.getListModel();
-        empleadosListModel.addElement("Jose");
-        empleadosListModel.addElement("Antonio");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus");
-        empleadosListModel.addElement("Jesus"); 
-        empleadosListModel.addElement("Jesus"); 
-        empleadosListModel.addElement("Jesus"); 
-        empleadosListModel.addElement("Jesus"); 
-        empleadosListModel.addElement("Jesus"); 
-        
-
-        // Configura el panel wrapper
-        JPanel wrapperPanel = new JPanel(new BorderLayout());
-        wrapperPanel.add(customScrollPane, BorderLayout.CENTER);
-        return wrapperPanel;
     }
 }

@@ -1,20 +1,23 @@
 package UI;
 
-import Controller.UserManager;
-import Exceptions.MyException;
+
+import UI.CustomComponents.CustomButton;
+import UI.CustomComponents.PlaceholderPasswordField;
+import UI.CustomComponents.PlaceholderTextField;
+import UI.CustomComponents.RoundedShadowPanel;
 import Utils.FontManager;
 import Utils.RequestFocusListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginShadowPanel extends RoundedShadowPanel {
     private PlaceholderTextField usernameField;
     private PlaceholderPasswordField passwordField;
-    CustomButton register, login;
+    private CustomButton register, login;
     private Font title = FontManager.cargarFuente("spotify-bold.otf", 24f);
+    private Font button = FontManager.cargarFuente("spotify-bold.otf", 13f);
     private Font text = FontManager.cargarFuente("spotify.otf", 13f);
     private SoundXFrame parentFrame;
 
@@ -68,7 +71,6 @@ public class LoginShadowPanel extends RoundedShadowPanel {
         register.addAncestorListener(new RequestFocusListener(false));
         register.requestFocus();
         register.requestFocusInWindow();
-        login.addActionListener(e -> login());
         
     }
     
@@ -78,34 +80,15 @@ public class LoginShadowPanel extends RoundedShadowPanel {
         register.addActionListener(e);
     }
     
-    public void login(){
-        try {
-            // Crear una instancia de UserManager
-            System.out.println(getUsername().toLowerCase().trim());
-            UserManager userManager = new UserManager(getUsername().toLowerCase().trim());
-
-            // Llamar al método validateUsuario con los campos de texto
-            boolean isValid = userManager.validateUsuario(getUsername().toLowerCase().trim(), getPassword().toLowerCase().trim());
-
-            // Si la validación es exitosa, puedes realizar acciones adicionales aquí
-            if (isValid) {
-                // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
-                parentFrame.mostrarMensaje("Inicio de sesión exitoso");
-
-                // Aquí podrías cambiar a otra ventana o realizar otras acciones necesarias
-            } else {
-                // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
-                parentFrame.mostrarError("Usuario o contraseña incorrectos");
-            }
-        } catch (MyException ex) {
-            parentFrame.mostrarError(ex.getMessage());
-        }
+    public void setLogin(ActionListener e){
+        login.addActionListener(e);
     }
 
     // Método para crear un botón personalizado
     private CustomButton createCustomButton(String text) {
         CustomButton button = new CustomButton(text);
-        button.setPreferredSize(new Dimension(130, 30)); // Tamaño deseado para los botones
+        button.setPreferredSize(new Dimension(150, 35)); // Tamaño deseado para los botones
+        button.setFont(this.button);
         return button;
     }
 
@@ -117,5 +100,9 @@ public class LoginShadowPanel extends RoundedShadowPanel {
     // Método para obtener la contraseña ingresada
     public String getPassword() {
         return String.valueOf(passwordField.getPassword());
+    }
+
+    public SoundXFrame getParentFrame() {
+        return parentFrame;
     }
 }

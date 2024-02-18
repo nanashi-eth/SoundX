@@ -1,4 +1,4 @@
-package UI;
+package UI.CustomComponents;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -55,21 +55,22 @@ public class CustomButton extends JButton {
 
         // Dibujar el fondo del botón
         if (getModel().isPressed()) {
-            g2d.setColor(BUTTON_COLOR.darker());
+            g2d.setColor(BUTTON_COLOR.brighter());
         } else if (getModel().isRollover()) {
             g2d.setColor(BUTTON_COLOR.brighter());
         } else {
             g2d.setColor(BUTTON_COLOR);
         }   
         g2d.fillRoundRect(3, 3, getWidth() - 6, getHeight() - 6, 15, 15);
-        
-//        if (isFocus) {
-//            g2d.setColor(BUTTON_BORDER_COLOR);
-//            g2d.drawRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-//        }
+
+        // Dibujar el texto del botón
+        FontMetrics metrics = g2d.getFontMetrics(getFont());
+        int x = (getWidth() - metrics.stringWidth(getText())) / 2;
+        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent() + 2;
+        g2d.setColor(BUTTON_FOREGROUND_COLOR);
+        g2d.drawString(getText(), x, y);
 
         g2d.dispose();
-        super.paintComponent(g);
     }
 
     @Override
