@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 
 import UI.CustomComponents.CustomListCellRenderer;
 import Utils.FontManager;
+import org.jdesktop.swingx.border.DropShadowBorder;
 
 public class MyScrollPane extends JScrollPane {
     private DefaultListModel<String[]> listModel;
@@ -20,13 +21,32 @@ public class MyScrollPane extends JScrollPane {
         setupScrollPane();
         setupList();
         setupHeaderLabel();
-        
+
         // Agregar el headerLabel encima del JList en un BorderLayout
         setColumnHeaderView(headerLabel);
         getColumnHeader().setOpaque(false);
         setViewportView(list);
         Font font = FontManager.cargarFuente("spotify.otf", 13f);
         setFontRecursively(this, font);
+
+        DropShadowBorder shadow = new DropShadowBorder();
+        shadow.setShadowColor(Color.BLACK);
+        shadow.setShowLeftShadow(false);
+        shadow.setShowRightShadow(false);
+        shadow.setShowBottomShadow(true);
+        shadow.setShowTopShadow(false);
+
+        // Agregar un listener de desplazamiento para controlar la sombra del headerLabel
+        getVerticalScrollBar().addAdjustmentListener(e -> {
+            int value = e.getValue();
+            if (value > 0) {
+                // Aplicar efecto de sombra si el desplazamiento es mayor que 0
+                headerLabel.setBorder(shadow);
+            } else {
+                // Eliminar el efecto de sombra si el desplazamiento es 0
+                headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            }
+        });
     }
 
     private void setupScrollPane() {

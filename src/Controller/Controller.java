@@ -24,6 +24,7 @@ public class Controller {
     private final SoundXFrame ventana;
     private SplitPane vistaPlaylist;
     private PlaylistPane playlistPane;
+    private ScrollPaneSongs songs;
     private JPanel playlistPanel;
     private ProfilePane profilePane; 
     private int currentIndex;
@@ -32,6 +33,7 @@ public class Controller {
         this.ventana = ventana;
         this.loginShadowPanel = login;
         this.loginShadowPanel.setLogin(e -> login());
+        this.songs = new ScrollPaneSongs();
         this.ventana.exit(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -75,6 +77,7 @@ public class Controller {
         try {
             CancionManager cancionManager = new CancionManager();
             allSongs = cancionManager.getAllCanciones();
+            updateSongs();
         } catch (MyException e) {
             ventana.mostrarError(e.getMessage());
         }
@@ -125,8 +128,12 @@ public class Controller {
         SideBar sideBar = this.vistaPlaylist.getSideBar();
         sideBar.profileDist(e -> profile());
         sideBar.playlistDist(e ->playlist());
-        sideBar.songDist(e ->{});
+        sideBar.songDist(e -> songsDist());
         sideBar.acercaDe(e ->{ new AboutDialog(ventana).setVisible(true);});
+    }
+
+    private void songsDist() {
+        vistaPlaylist.setRightComponent(songs);
     }
 
     public void playlist() {
@@ -149,4 +156,15 @@ public class Controller {
             songs.addElement(actual);
         }
     }
+    
+    public void updateSongs(){
+        DefaultListModel<String[]> songs = this.songs.getListModel();
+        songs.removeAllElements();
+        for (Cancion cancion: allSongs){
+            String [] actual = {cancion.getImagen(), cancion.getNombreCancion(), cancion.getAutor(), SimpleTimeFormatter.formatMinutes(cancion.getDuracion()), SimpleTimeFormatter.formatDate(cancion.getFecha(), "DD/MM/YYYY")};
+            songs.addElement(actual);
+        }
+    }
+    
+    
 }
