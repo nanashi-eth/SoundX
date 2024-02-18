@@ -23,19 +23,16 @@ public class CancionManager extends ResultSetManager implements Queryable{
             st = ConnectionDB.getConnection().prepareStatement(GET_ALL_SONGS_WITH_AUTHOR);
             rs = st.executeQuery();
             // Mover al primer resultado del ResultSet
-            moveResultSetCursor(rs, ResultSetMovement.FIRST);
-            while (!rs.isAfterLast()) {
+            while (!rs.next()) {
                 Cancion cancion = new Cancion(
-                        rs.getString("nombreCancion"),
-                        rs.getDate("fecha"),
-                        obtenerNombreAutor(rs.getInt("autorID")),
-                        rs.getString("imagen"),
-                        rs.getFloat("duracion")
+                        rs.getString("C.nombreCancion"),
+                        rs.getDate("C.fecha"),
+                        rs.getString("A.nomAutor"),
+                        rs.getString("C.imagen"),
+                        rs.getFloat("C.duracion")
                 );
-                cancion.setCancionID(rs.getInt("cancionID"));
+                cancion.setCancionID(rs.getInt("C.cancionID"));
                 canciones.add(cancion);
-                // Mover al siguiente resultado del ResultSet
-                moveResultSetCursor(rs, ResultSetMovement.NEXT);
             }
         } catch (SQLException ex) {
             handleSQLException(213);

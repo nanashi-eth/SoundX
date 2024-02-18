@@ -82,9 +82,6 @@ public class SoundXFrame extends JFrame {
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
-
-    
-    
 }
 
 

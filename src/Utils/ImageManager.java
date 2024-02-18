@@ -57,5 +57,13 @@ public class ImageManager {
 
         return imagen;
     }
+
+    public static void sobrescribirImagen(String rutaOrigen, String rutaDestino) throws IOException {
+            BufferedImage imagen = ImageIO.read(new File(rutaOrigen));
+            rutaDestino = System.getProperty("user.dir") + "/src/Data/Profile/" + rutaDestino;
+            File destino = new File(rutaDestino);
+            ImageIO.write(imagen, "jpg", destino);
+            System.out.println("Imagen sobrescrita exitosamente en: " + rutaDestino);
+    }
 }
 

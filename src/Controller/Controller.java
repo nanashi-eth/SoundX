@@ -1,15 +1,16 @@
 package Controller;
 
+import Exceptions.ErrorLogger;
 import Exceptions.MyException;
 import Modelo.Cancion;
 import Modelo.Playlist;
 import Modelo.Usuario;
-import UI.LoginShadowPanel;
-import UI.PlaylistPane;
-import UI.SoundXFrame;
-import UI.SplitPane;
+import UI.*;
+import Utils.ImageManager;
 import Utils.SimpleTimeFormatter;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -18,10 +19,13 @@ import java.util.List;
 public class Controller {
     private static Usuario usuarioActual = new Usuario();
     private static List<Playlist> playlists = new ArrayList<>();
+    private static List<Cancion> allSongs = new ArrayList<>();
     private final LoginShadowPanel loginShadowPanel;
     private final SoundXFrame ventana;
     private SplitPane vistaPlaylist;
     private PlaylistPane playlistPane;
+    private JPanel playlistPanel;
+    private ProfilePane profilePane; 
     private int currentIndex;
 
     public Controller(SoundXFrame ventana, LoginShadowPanel login) {
@@ -31,7 +35,7 @@ public class Controller {
         this.ventana.exit(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                ConnectionDB.deleteDB();
+                ErrorLogger.getInstance().generateErrorReport(System.getProperty("user.dir") + "/src/Data/Log.txt");
                 ventana.dispose();
             }
         });
@@ -52,8 +56,12 @@ public class Controller {
                 usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
                 usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
                 usuarioActual.setUserID(userManager.getUserIdByName(usuarioActual.getNombreUsuario()));
+                usuarioActual.setImagen(userManager.getUserImgByName(usuarioActual.getNombreUsuario()));
                 ventana.changePanel();
+                profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getImagen(), 100, 100, false));
+                profilePane.setName(usuarioActual.getNombreUsuario());
                 loadUserData();
+                loadSongs();
             } else {
                 // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
                 loginShadowPanel.getParentFrame().mostrarError("Usuario o contraseña incorrectos");
@@ -63,6 +71,14 @@ public class Controller {
         }        
     }
 
+    public void loadSongs(){
+        try {
+            CancionManager cancionManager = new CancionManager();
+            allSongs = cancionManager.getAllCanciones();
+        } catch (MyException e) {
+            ventana.mostrarError(e.getMessage());
+        }
+    }
     private void loadUserData() {
         PlaylistManager playlistManager = new PlaylistManager();
         try {
@@ -80,6 +96,7 @@ public class Controller {
                         ventana.mostrarError(e.getMessage());
                     }
                 }
+                profilePane.setTotalPlaylists(String.valueOf(playlists.size()));
                 currentIndex = playlists.size() - 1;
                 playlistPane = vistaPlaylist.getPlaylistPane();
                 playlistPane.setFirst(e -> {
@@ -105,6 +122,21 @@ public class Controller {
 
     public void setVistaPlaylist(SplitPane vistaPlaylist) {
         this.vistaPlaylist = vistaPlaylist;
+        SideBar sideBar = this.vistaPlaylist.getSideBar();
+        sideBar.profileDist(e -> profile());
+        sideBar.playlistDist(e ->playlist());
+        sideBar.songDist(e ->{});
+        sideBar.acercaDe(e ->{ new AboutDialog(ventana).setVisible(true);});
+    }
+
+    public void playlist() {
+        vistaPlaylist.setRightComponent(playlistPanel);
+    }
+
+    public void profile(){
+        playlistPanel = (JPanel) vistaPlaylist.getRightComponent();
+        playlistPanel.setPreferredSize(new Dimension(600, playlistPanel.getHeight()));
+        vistaPlaylist.setRightComponent(profilePane);
     }
     
     public void updatePlaylist(){

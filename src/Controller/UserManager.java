@@ -53,6 +53,21 @@ public class UserManager extends ResultSetManager implements Queryable {
         }
         return userId;
     }
+    
+    public String getUserImgByName(String username) throws MyException {
+        String img = ""; // Valor por defecto si no se encuentra el usuario
+        try {
+            PreparedStatement getUserIdStmt = ConnectionDB.getConnection().prepareStatement(GET_USER_BY_NAME);
+            getUserIdStmt.setString(1, username);
+            ResultSet userIdResultSet = getUserIdStmt.executeQuery();
+            if (userIdResultSet.next()) {
+                img = userIdResultSet.getString("imagen");
+            }
+        } catch (SQLException ex) {
+            handleSQLException(202);
+        }
+        return img;
+    }
 
     public boolean usernameExists(String username) throws MyException {
         try {

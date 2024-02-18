@@ -12,9 +12,10 @@ public class SplitPane extends JSplitPane {
     private MyScrollPane customScrollPane;
     private PlaylistPane playlistPane;
     private MedIconButton add;
+    private  SideBar sideBar;
     public SplitPane() {
         setBackground(Color.BLACK);
-        SideBar sideBar = new SideBar();
+        sideBar = new SideBar();
         customScrollPane = new MyScrollPane(){
             @Override
             public Dimension getMinimumSize()
@@ -45,6 +46,10 @@ public class SplitPane extends JSplitPane {
         setDividerLocation(200);
         setLeftComponent(sideBar);
         setRightComponent(wrapperPanel);
+    }
+
+    public SideBar getSideBar() {
+        return sideBar;
     }
 
     public MyScrollPane getCustomScrollPane() {

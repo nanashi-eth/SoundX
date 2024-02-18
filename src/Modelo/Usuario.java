@@ -14,6 +14,8 @@ public class Usuario {
 
     @Column(name = "password")
     private String password;
+    @Column(name = "imagen")
+    private String imagen;
 
     public Usuario(String nombreUsuario, String password) {
         this.nombreUsuario = nombreUsuario;
@@ -46,5 +48,13 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }
