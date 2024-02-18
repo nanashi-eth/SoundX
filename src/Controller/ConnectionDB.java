@@ -6,10 +6,8 @@ import Exceptions.MyException;
 
 import java.io.*;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 
 public class ConnectionDB {
     private static final String URL = "jdbc:mysql://localhost:3306/practica06";
@@ -55,7 +53,7 @@ public class ConnectionDB {
         String filePath = System.getProperty("user.dir") + "/src/Data/db/Music.sql";
         try (Connection conn = getConnection()) {
             ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null); 
+            runner.setLogWriter(null);
 
             try (Reader reader = new BufferedReader(new FileReader(filePath))) {
                 runner.runScript(reader);

@@ -110,11 +110,14 @@ public class UserManager extends ResultSetManager implements Queryable {
             st.setString(1, String.valueOf(userId));
             rs = st.executeQuery();
             while (rs.next()) {
-                playlists.add(new Playlist(rs.getString("nombrePlaylist"), userId, rs.getFloat("minutosTotales")));
+                Playlist current = new Playlist(rs.getString("nombrePlaylist"), userId, rs.getFloat("minutosTotales"));
+                current.setPlaylistID(rs.getInt("playlistID"));
+                playlists.add(current);
             }
         } catch (SQLException ex) {
             handleSQLException(209);
         }
+        System.out.println(playlists.size());
         return playlists;
     }
 

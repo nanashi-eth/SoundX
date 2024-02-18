@@ -29,6 +29,7 @@ public interface Queryable {
     // Actualizar los minutos totales de una playlist específica
     String UPDATE_PLAYLIST_TOTAL_MINUTES = "UPDATE PLAYLIST SET minutosTotales = ? WHERE playlistID = ?";
 
+    String GET_AUTOR_NAME = "SELECT nomAutor FROM AUTOR WHERE autorID = ?";
     String GET_ALL_SONGS_WITH_AUTHOR = "SELECT C.cancionID, C.nombreCancion, C.fecha, A.nomAutor, C.imagen, C.duracion " +
             "FROM CANCION C " +
             "JOIN AUTOR A ON C.autorID = A.autorID";

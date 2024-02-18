@@ -10,30 +10,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistManager extends ResultSetManager {
+public class PlaylistManager extends ResultSetManager implements Queryable{
 
     private PreparedStatement st = null;
     private ResultSet rs = null;
+
+    public PlaylistManager() {
+    }
 
     public List<Cancion> getCancionesFromPlaylist(int playlistID) throws MyException {
         List<Cancion> canciones = new ArrayList<>();
         try {
             ConnectionDB.openConnection();
-            st = ConnectionDB.getConnection().prepareStatement(Queryable.GET_ALL_SONGS_FROM_PLAYLIST);
+            st = ConnectionDB.getConnection().prepareStatement(GET_ALL_SONGS_FROM_PLAYLIST);
             st.setInt(1, playlistID);
             rs = st.executeQuery();
             // Mover al primer resultado del ResultSet
-            moveResultSetCursor(rs, ResultSetMovement.FIRST);
-            while (!rs.isAfterLast()) {
-//                Cancion cancion = new Cancion(
-//                        rs.getString("nombreCancion"),
-//                        rs.getDate("fecha"),
-//                        rs.getInt("autorID"),
-//                        rs.getString("imagen"),
-//                        rs.getFloat("duracion")
-//                );
-//                cancion.setCancionID(rs.getInt("cancionID"));
-//                canciones.add(cancion);
+            CancionManager cancionManager = new CancionManager();
+            while (rs.next()) {
+                Cancion cancion = new Cancion(
+                        rs.getString("nombreCancion"),
+                        rs.getDate("fecha"),
+                        cancionManager.obtenerNombreAutor(rs.getInt("autorID")),
+                        rs.getString("imagen"),
+                        rs.getFloat("duracion")
+                );
+                cancion.setCancionID(rs.getInt("cancionID"));
+                canciones.add(cancion);
                 // Mover al siguiente resultado del ResultSet
                 moveResultSetCursor(rs, ResultSetMovement.NEXT);
             }

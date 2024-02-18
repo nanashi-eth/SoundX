@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class SoundX {
     public static void main(String[] args) {
@@ -22,12 +23,11 @@ public class SoundX {
             // Abre la conexión a la base de datos
             try {
                 ConnectionDB.openConnection();
-                // Ejecuta el script SQL desde el archivo especificado
                 ConnectionDB.executeScript();
             } catch (MyException e) {
                 ErrorLogger.getInstance().logError(AppErrors.DATABASE_OPEN_ERROR);
                 ventana.mostrarError(e.getMessage());
-            }
+            } 
         });
     }
 }

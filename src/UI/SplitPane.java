@@ -1,16 +1,17 @@
 package UI;
 
-import UI.CustomComponents.MyScrollPane;
+import UI.CustomComponents.BigIconButton;
+import UI.CustomComponents.MedIconButton;
 import UI.CustomComponents.RoundedPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class SplitPane extends JSplitPane {
     private JPanel wrapperPanel;
     private MyScrollPane customScrollPane;
+    private PlaylistPane playlistPane;
+    private MedIconButton add;
     public SplitPane() {
         setBackground(Color.BLACK);
         SideBar sideBar = new SideBar();
@@ -23,21 +24,33 @@ public class SplitPane extends JSplitPane {
                 return d;
             }
         };
-        DefaultListModel<String[]> empleadosListModel = customScrollPane.getListModel();
-        String [] hola = {"4Roses.jpg", "Jose", "Antonio", "Jesus"};
-        empleadosListModel.addElement(hola);
-        empleadosListModel.addElement(hola);
-        empleadosListModel.addElement(hola);
-        // Añade más elementos si es necesario
 
         // Configura el panel wrapper
         wrapperPanel = new RoundedPanel(new BorderLayout());
+        playlistPane = new PlaylistPane();
+        Dimension d = new Dimension(600, 150);
+        playlistPane.setMinimumSize(d);
+        playlistPane.setPreferredSize(d);
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+        wrap.setOpaque(false);
+        add = new MedIconButton("\ue48e");
+        wrapperPanel.add(playlistPane,BorderLayout.NORTH );
         wrapperPanel.add(customScrollPane, BorderLayout.CENTER);
+        wrap.add(add, BorderLayout.NORTH);
+        wrapperPanel.add(wrap, BorderLayout.SOUTH);
 
         // Configura el JSplitPane
         setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         setDividerLocation(200);
         setLeftComponent(sideBar);
         setRightComponent(wrapperPanel);
+    }
+
+    public MyScrollPane getCustomScrollPane() {
+        return customScrollPane;
+    }
+    public PlaylistPane getPlaylistPane(){
+        return playlistPane;
     }
 }

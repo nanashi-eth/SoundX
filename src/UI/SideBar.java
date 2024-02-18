@@ -1,8 +1,7 @@
 package UI;
 
-import UI.CustomComponents.CustomMenu;
 import UI.CustomComponents.CustomMenuBar;
-import UI.CustomComponents.IconButton;
+import UI.CustomComponents.SideBarButton;
 import UI.CustomComponents.RoundedPanel;
 import Utils.FontManager;
 
@@ -11,7 +10,7 @@ import java.awt.*;
 
 
 public class SideBar extends RoundedPanel {
-    private Font icon = FontManager.cargarFuente("icon.otf", 15f);
+    private Font icon = FontManager.cargarFuente("icon.otf", 18f);
     public SideBar() {
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new BorderLayout());
@@ -22,8 +21,8 @@ public class SideBar extends RoundedPanel {
         menu.setOpaque(false);
         menu.setForeground(Color.WHITE);
         menu.setFont(icon);
-        JMenuItem menuItem1 = new JMenuItem("Opción 1");
-        JMenuItem menuItem2 = new JMenuItem("Opción 2");
+        JMenuItem menuItem1 = new JMenuItem("Cerrar Sesion");
+        JMenuItem menuItem2 = new JMenuItem("Borrar Usuario");
         menu.add(menuItem1);
         menu.add(menuItem2);
         menuBar.add(Box.createHorizontalStrut(8));
@@ -31,9 +30,9 @@ public class SideBar extends RoundedPanel {
         add(menuBar, BorderLayout.NORTH);
 
         // Agrega los componentes de la barra lateral
-        JButton button1 = new IconButton("Opción 3", "\uF0C7", e -> saludar());
-        JButton button2 = new IconButton("Opción 4", "\uF0C7", e -> saludar());
-        JButton button3 = new IconButton("Opción 5", "\uF0C7", e -> saludar());
+        JButton button1 = new SideBarButton("Perfil", "\uf007", e -> saludar());
+        JButton button2 = new SideBarButton("Playlists", "\uf8c9", e -> saludar());
+        JButton button3 = new SideBarButton("Canciones", "\uf89f", e -> saludar());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
@@ -46,7 +45,7 @@ public class SideBar extends RoundedPanel {
         add(buttonPanel, BorderLayout.CENTER);
 
         // Agrega un botón al final de la barra lateral
-        JButton bottomButton = new IconButton("Bottom Button", "\uF0C7", e -> saludar());
+        JButton bottomButton = new SideBarButton("Acerca De", "\uf05a", e -> saludar());
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
         wrapper.setOpaque(false);

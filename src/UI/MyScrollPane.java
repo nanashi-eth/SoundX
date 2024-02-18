@@ -1,10 +1,11 @@
-package UI.CustomComponents;
+package UI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import UI.CustomComponents.CustomListCellRenderer;
 import Utils.FontManager;
 
 public class MyScrollPane extends JScrollPane {
@@ -70,7 +71,7 @@ public class MyScrollPane extends JScrollPane {
 
     private void setupHeaderLabel() {
         Font font = FontManager.cargarFuente("spotify-bold.otf", 15f);
-        String headerText = String.format("%-20s  %-20s  %-20s", "Title", "Artist", "Duration");
+        String headerText = String.format("                            %-30s%-30s%-30s", "Title", "Artist", "Duration");
         headerLabel = new JLabel(headerText);
         headerLabel.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
         headerLabel.setOpaque(false);

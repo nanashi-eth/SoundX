@@ -1,15 +1,10 @@
 package UI.CustomComponents;
 
+import UI.MyScrollPane;
 import Utils.ImageManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class CustomListCellRenderer extends DefaultListCellRenderer {
 
@@ -32,7 +27,7 @@ public class CustomListCellRenderer extends DefaultListCellRenderer {
         }
 
         // Formatear los strings con el mismo espaciado que el headerLabel
-        String formattedValue = String.format("%-25s   %-25s   %-25s", data[1], data[2], data[3]);
+        String formattedValue = String.format("%-30s %-30s %-5s", data[1], data[2], data[3]);
         Color backgroundColor = parent.getmHoveredJListIndex()== index ? new Color(18, 18, 18).brighter().brighter() : new Color(18, 18, 18);
         JLabel label = (JLabel) super.getListCellRendererComponent(
                 list, formattedValue, index, isSelected, cellHasFocus);

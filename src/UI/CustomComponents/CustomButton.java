@@ -33,7 +33,7 @@ public class CustomButton extends JButton {
             @Override
             public void focusLost(FocusEvent e) {
                 setBorderPainted(false);
-                repaint(); // Vuelve a dibujar el botón para eliminar el borde de enfoque
+                repaint(); 
             }
         });
 

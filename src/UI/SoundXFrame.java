@@ -61,6 +61,7 @@ public class SoundXFrame extends JFrame {
     
     public void changePanel(){
         SplitPane pane = new SplitPane();
+        control.setVistaPlaylist(pane);
         setContentPane(pane);
         repaint();
         revalidate();
