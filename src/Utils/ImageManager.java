@@ -37,7 +37,7 @@ public class ImageManager {
                 images.put(rutaImagen, img);
                 return img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             } catch (IOException e) {
-                return null;
+                return cargarImagen(DEFAULT_IMAGE_PATH, width, height);
             }
         }
     }

@@ -21,6 +21,7 @@ public class UserManager extends ResultSetManager implements Queryable {
             ConnectionDB.openConnection();
             st = ConnectionDB.getConnection().prepareStatement(GET_ALL_USERS, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             rs = st.executeQuery();
+            clearData();
         } catch (SQLException ex) {
             handleSQLException(202);
         }
@@ -95,14 +96,57 @@ public class UserManager extends ResultSetManager implements Queryable {
             if (usernameExists(user.getNombreUsuario())) {
                 throw new MyException(201);
             }
-            rs.moveToInsertRow();
-            rs.updateString("nombreUsuario", user.getNombreUsuario());
-            rs.updateString("password", user.getPassword());
-            rs.insertRow();
-            rs.moveToCurrentRow();
+            clearData();
+            // Preparar la declaración de inserción
+            PreparedStatement insertStmt = ConnectionDB.getConnection().prepareStatement(INSERT_USER);
+            insertStmt.setString(1, user.getNombreUsuario()); // Setear el nombre de usuario
+            insertStmt.setString(2, user.getPassword()); // Setear la contraseña
+            insertStmt.setString(3, user.getImagen()); // Setear la imagen
+            insertStmt.executeUpdate(); // Ejecutar la inserción
+
             ConnectionDB.getConnection().commit();
         } catch (SQLException ex) {
             handleSQLException(205);
+        }
+    }
+
+    public void deleteUser(int userId) throws MyException {
+        try {
+            // Preparar la declaración de eliminación
+            PreparedStatement dst = ConnectionDB.getConnection().prepareStatement(DELETE_PLAYLIST_CANCION_BY_USERID);
+            dst.setInt(1, userId); // Setear el nombre de usuario para la condición WHERE
+            int rowsAffected = dst.executeUpdate();
+            // Verificar si se eliminó correctamente al menos una fila
+            if (rowsAffected > 0) {
+                ConnectionDB.getConnection().commit(); // Confirmar los cambios en la base de datos
+                dst = null;
+            } else {
+                throw new MyException(208); // Lanzar una excepción si no se eliminó ninguna fila (usuario no encontrado)
+            }
+            dst = ConnectionDB.getConnection().prepareStatement(DELETE_PLAYLIST_BY_USERID);
+            dst.setInt(1, userId); // Setear el nombre de usuario para la condición WHERE
+            rowsAffected = dst.executeUpdate();
+            // Verificar si se eliminó correctamente al menos una fila
+            if (rowsAffected > 0) {
+                ConnectionDB.getConnection().commit(); // Confirmar los cambios en la base de datos
+                dst = null;
+            } else {
+                throw new MyException(208); // Lanzar una excepción si no se eliminó ninguna fila (usuario no encontrado)
+            }
+            dst = ConnectionDB.getConnection().prepareStatement(DELETE_USER_BY_USERID);
+            dst.setInt(1, userId); // Setear el nombre de usuario para la condición WHERE
+            // Ejecutar la eliminación
+            rowsAffected = dst.executeUpdate();
+            // Verificar si se eliminó correctamente al menos una fila
+            if (rowsAffected > 0) {
+                ConnectionDB.getConnection().commit();// Confirmar los cambios en la base de datos
+                dst = null;
+            } else {
+                throw new MyException(208); // Lanzar una excepción si no se eliminó ninguna fila (usuario no encontrado)
+            }
+            clearData();
+        } catch (SQLException ex) {
+            handleSQLException(208); // Manejar la excepción SQL
         }
     }
 

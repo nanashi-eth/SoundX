@@ -76,7 +76,7 @@ public class LoginShadowPanel extends RoundedShadowPanel {
     
     
 
-    private void registrar(ActionListener e) {
+    public void registrar(ActionListener e) {
         register.addActionListener(e);
     }
     

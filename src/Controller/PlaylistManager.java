@@ -90,6 +90,54 @@ public class PlaylistManager extends ResultSetManager implements Queryable{
         }
     }
 
+    public void agregarCancionAPlaylist(int playlistID, int cancionID, float nuevosMinutosTotales) throws MyException {
+        try {
+            // Abrir conexión a la base de datos
+            ConnectionDB.openConnection();
+
+            // Insertar la canción en la playlist
+            PreparedStatement insertStmt = ConnectionDB.getConnection().prepareStatement(INSERT_SONG_INTO_PLAYLIST);
+            insertStmt.setInt(1, playlistID);
+            insertStmt.setInt(2, cancionID);
+            insertStmt.executeUpdate();
+
+            // Actualizar los minutos totales de la playlist
+            PreparedStatement updatePlaylistStmt = ConnectionDB.getConnection().prepareStatement(UPDATE_PLAYLIST_TOTAL_MINUTES);
+            updatePlaylistStmt.setFloat(1, nuevosMinutosTotales);
+            updatePlaylistStmt.setInt(2, playlistID);
+            updatePlaylistStmt.executeUpdate();
+
+            ConnectionDB.cerrarConexion();
+        } catch (SQLException ex) {
+            handleSQLException(210); // Manejar la excepción adecuadamente
+        }
+    }
+
+    public void eliminarCancionDePlaylist(int playlistID, int cancionID, float nuevosMinutosTotales) throws MyException {
+        try {
+            // Abrir conexión a la base de datos
+            ConnectionDB.openConnection();
+
+            // Eliminar la canción de la playlist
+            PreparedStatement deleteStmt = ConnectionDB.getConnection().prepareStatement(DELETE_SONG_FROM_PLAYLIST);
+            deleteStmt.setInt(1, playlistID);
+            deleteStmt.setInt(2, cancionID);
+            deleteStmt.executeUpdate();
+
+            // Actualizar los minutos totales de la playlist
+            PreparedStatement updatePlaylistStmt = ConnectionDB.getConnection().prepareStatement(UPDATE_PLAYLIST_TOTAL_MINUTES);
+            updatePlaylistStmt.setFloat(1, nuevosMinutosTotales);
+            updatePlaylistStmt.setInt(2, playlistID);
+            updatePlaylistStmt.executeUpdate();
+
+            ConnectionDB.cerrarConexion();
+        } catch (SQLException ex) {
+            handleSQLException(210); // Manejar la excepción adecuadamente
+        }
+    }
+
+
+
     public void clearData() {
         // Cerrar ResultSet y PreparedStatement utilizando el método de la clase padre
         super.closeResultSetAndStatement(rs, st);

@@ -51,14 +51,14 @@ public class PlaylistPane extends RoundedPanel {
         gbc.gridx = 4;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        titulo = new JLabel("Label Grande");
+        titulo = new JLabel("User");
         titulo.setMinimumSize(new Dimension(150, 50));
         titulo.setFont(FontManager.cargarFuente("spotify-bold.otf", 16f)); // Establece un tamaño de fuente más grande
         add(titulo, gbc);
 
         // Agregar la etiqueta pequeña a la derecha abajo
         gbc.gridy = 1;
-        duracion = new JLabel("Label Pequeño");
+        duracion = new JLabel("Mins");
         duracion.setFont(FontManager.cargarFuente("spotify.otf", 13f));
         duracion.setMinimumSize(new Dimension(50, 50));
         duracion.setForeground(new Color(186, 175, 161));

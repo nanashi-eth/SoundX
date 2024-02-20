@@ -32,11 +32,13 @@ public class Controller {
     private JPanel currentPlaylist, currentSong;
     private ProfilePane currentProfile;
     private int currentIndex;
+    private MyScrollPane playlistSongs;
 
     public Controller(SoundXFrame ventana, LoginShadowPanel login) {
         this.ventana = ventana;
         this.loginShadowPanel = login;
         this.loginShadowPanel.setLogin(e -> login());
+        this.loginShadowPanel.registrar(e -> addUser());
         this.songs = new ScrollPaneSongs();
         this.ventana.exit(new WindowAdapter() {
             @Override
@@ -62,20 +64,10 @@ public class Controller {
 
             // Si la validación es exitosa, puedes realizar acciones adicionales aquí
             if (isValid) {
-                // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
                 loginShadowPanel.getParentFrame().mostrarMensaje("Inicio de sesión exitoso");
-                // Actualizar los datos del usuario actual
-                usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
-                usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
                 usuarioActual.setUserID(userManager.getUserIdByName(usuarioActual.getNombreUsuario()));
                 usuarioActual.setImagen(userManager.getUserImgByName(usuarioActual.getNombreUsuario()));
-                ventana.changePanel();
-                profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getImagen(), 100, 100, false));
-                profilePane.setName(usuarioActual.getNombreUsuario());
-                loadUserData();
-                loadSongs();
-                profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
-                profilePane.cambiarImagen(e ->cambiarFoto());
+                setView();
             } else {
                 // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
                 loginShadowPanel.getParentFrame().mostrarError("Usuario o contraseña incorrectos");
@@ -90,7 +82,20 @@ public class Controller {
         usuarioActual.setNombreUsuario(newUsername.toLowerCase().trim());
         usuarioActual.setPassword(newPassword.toLowerCase().trim());
     }
-
+    
+    public void setView(){
+        // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
+        // Actualizar los datos del usuario actual
+        usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
+        usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
+        ventana.changePanel();
+        profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getImagen(), 100, 100, false));
+        profilePane.setName(usuarioActual.getNombreUsuario());
+        loadSongs();
+        loadUserData();
+        profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
+        profilePane.cambiarImagen(e ->cambiarFoto());
+    }
     public void updateUserInDatabase(String newUsername, String newPassword) {
         try {
             Usuario temp = new Usuario(newUsername, newPassword);
@@ -166,7 +171,10 @@ public class Controller {
                 currentProfile = profilePane;
                 currentIndex = playlists.size() - 1;
                 playlistPane = vistaPlaylist.getPlaylistPane();
+                playlistSongs = vistaPlaylist.getCustomScrollPane();
+                playlistSongs.deleteSong(e -> deleteSong());
                 currentPlaylist = (JPanel) vistaPlaylist.getRightComponent();
+                
                 playlistPane.setFirst(e -> {
                     currentIndex = 0;
                     updatePlaylist();
@@ -196,6 +204,7 @@ public class Controller {
         sideBar.songDist(e -> songsDist());
         sideBar.acercaDe(e ->{ new AboutDialog(ventana).setVisible(true);});
         sideBar.logout(e -> logout());
+        sideBar.delete(e -> deleteUser());
     }
 
     private void songsDist() {
@@ -214,7 +223,7 @@ public class Controller {
     public void profile(){
         playlistPanel = (JPanel) vistaPlaylist.getRightComponent();
         vistaPlaylist.setDividerLocation(200);
-        playlistPanel.setPreferredSize(new Dimension(600, playlistPanel.getHeight()));
+        playlistPanel.setPreferredSize(new Dimension(600, vistaPlaylist.getLeftComponent().getHeight()));
         vistaPlaylist.setRightComponent(currentProfile);
     }
     
@@ -231,6 +240,7 @@ public class Controller {
     
     public void updateSongs(){
         DefaultListModel<String[]> songs = this.songs.getListModel();
+        this.songs.addSong(e -> addSong());
         songs.removeAllElements();
         for (Cancion cancion: allSongs){
             String [] actual = {cancion.getImagen(), cancion.getNombreCancion(), cancion.getAutor(), SimpleTimeFormatter.formatMinutes(cancion.getDuracion()), SimpleTimeFormatter.formatDate(cancion.getFecha(), "DD/MM/YYYY")};
@@ -252,4 +262,84 @@ public class Controller {
         }
     }
     
+    public void addSong(){
+        String name = this.songs.obtenerNombre();
+        Cancion cancion = obtenerCancionPorNombre(allSongs, name);
+        if (obtenerCancionPorNombre(playlists.get(currentIndex).getCanciones(), name) != null) {
+            ventana.mostrarError("Esa cancion ya pertenece a la playlist");
+            return;
+        }
+        PlaylistManager playlistManager = new PlaylistManager();
+        try {
+            float nuevosMin = playlists.get(currentIndex).getMinutosTotales() + cancion.getDuracion();
+            playlistManager.agregarCancionAPlaylist(cancion.getCancionID(), playlists.get(currentIndex).getPlaylistID(),  playlists.get(currentIndex).getMinutosTotales());
+            System.out.println(name);
+            playlists.get(currentIndex).getCanciones().add(cancion);
+            playlists.get(currentIndex).setMinutosTotales(nuevosMin);
+            updatePlaylist();
+        } catch (MyException e) {
+            ventana.mostrarError("Error al agregar la cancion");
+        }
+    }
+    public void deleteSong(){
+        String name = this.playlistSongs.obtenerNombre();
+        Cancion cancion = obtenerCancionPorNombre(playlists.get(currentIndex).getCanciones(), name);
+        if (!playlists.get(currentIndex).getCanciones().contains(cancion)) {
+            ventana.mostrarError("Esa cancion no pertenece a la playlist");
+            return;
+        }
+        
+        PlaylistManager playlistManager = new PlaylistManager();
+        try {
+            float nuevosMin = playlists.get(currentIndex).getMinutosTotales() - cancion.getDuracion();
+            playlistManager.eliminarCancionDePlaylist(cancion.getCancionID(), playlists.get(currentIndex).getPlaylistID(),  playlists.get(currentIndex).getMinutosTotales());
+            playlists.get(currentIndex).getCanciones().remove(cancion);
+            playlists.get(currentIndex).setMinutosTotales(nuevosMin);
+            updatePlaylist();
+        } catch (MyException e) {
+            ventana.mostrarError("Error al borrar la cancion");
+        }
+        System.out.println(name);
+    }
+
+    // Método para obtener una canción por su nombre de un ArrayList de Canciones
+    public Cancion obtenerCancionPorNombre(List<Cancion> listaCanciones, String nombre) {
+        for (Cancion cancion : listaCanciones) {
+            if (cancion.getNombreCancion().equals(nombre)) {
+                return cancion; // Devuelve la canción si se encuentra por su nombre
+            }
+        }
+        return null; // Retorna null si no se encuentra ninguna canción con ese nombre
+    }
+    
+    public void deleteUser(){
+        UserManager userManager = null;
+        try {
+            userManager = new UserManager();
+            userManager.deleteUser(usuarioActual.getUserID());
+            logout();
+        } catch (MyException e) {
+            ventana.mostrarError(e.getMessage());
+        }
+    }
+    
+    public void addUser(){
+        try {
+        UserManager userManager = new UserManager();
+        Usuario user = new Usuario();
+        user.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
+        user.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
+        userManager.insertUsuario(user);
+        System.out.println(user.getNombreUsuario());
+        user.setUserID(userManager.getUserIdByName(user.getNombreUsuario()));
+        user.setImagen(user.getUserID() + ".jpg");
+        playlists = new ArrayList<>();
+        usuarioActual = user;
+        ventana.mostrarMensaje("Registro exitoso");
+        setView();
+        loadSongs();
+        } catch (MyException e) {
+            ventana.mostrarError(e.getMessage());
+        }
+    }
 }

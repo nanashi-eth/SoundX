@@ -72,6 +72,7 @@ public class SideBar extends RoundedPanel {
         bottomButton.addActionListener(e);
     }
     public void logout(ActionListener e){menuItem1.addActionListener(e);}
+    public void delete(ActionListener e){menuItem2.addActionListener(e);}
 
     private void saludar() {
         System.out.println("Hola");

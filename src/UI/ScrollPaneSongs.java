@@ -2,7 +2,6 @@ package UI;
 
 import UI.CustomComponents.CustomCellRenderer1;
 import UI.CustomComponents.PlaceholderTextField;
-import UI.CustomComponents.RoundedPanel;
 import Utils.FontManager;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
@@ -18,6 +17,7 @@ public class ScrollPaneSongs extends JScrollPane {
     private DefaultListModel<String[]> listModel;
     private JList<String[]> list;
     private JLabel headerLabel;
+    private JMenuItem opcion1;
     private int mHoveredJListIndex;
     private PlaceholderTextField filterTextField;
 
@@ -68,6 +68,8 @@ public class ScrollPaneSongs extends JScrollPane {
                 panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
             }
         });
+        opcion1 = new JMenuItem("Agregar a playlist");
+        opcion1.setFont(FontManager.cargarFuente("spotify.otf", 13));
     }
 
     private void setupFilterTextField() {
@@ -130,6 +132,16 @@ public class ScrollPaneSongs extends JScrollPane {
                 list.repaint();
             }
         });
+        list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) { // Verificar si se ha hecho clic derecho
+                    int index = list.locationToIndex(e.getPoint()); // Obtener el índice del elemento en el que se hizo clic
+                    list.setSelectedIndex(index); // Seleccionar el elemento
+                    mostrarMenuEmergente(e); // Mostrar el menú emergente
+                }
+            }
+        });
     }
 
     private void setupHeaderLabel() {
@@ -173,5 +185,27 @@ public class ScrollPaneSongs extends JScrollPane {
 
     public int getmHoveredJListIndex() {
         return mHoveredJListIndex;
+    }
+    
+
+    // Método para mostrar el menú emergente
+    private void mostrarMenuEmergente(MouseEvent e) {
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        popupMenu.add(opcion1);
+
+        popupMenu.show(list, e.getX(), e.getY());
+    }
+    public void addSong(ActionListener e){
+        opcion1.addActionListener(e);
+    }
+
+    public String obtenerNombre() {
+        int selectedIndex = list.getSelectedIndex();
+        if (selectedIndex != -1) {
+            String[] selectedData = list.getModel().getElementAt(selectedIndex);
+            return selectedData[1]; // Retorna el nombre de la canción
+        }
+        return null; // No hay ninguna canción seleccionada
     }
 }

@@ -11,6 +11,14 @@ public interface Queryable {
     // Obtener usuario por nombre
     String GET_USER_BY_NAME = "SELECT * FROM USUARIO WHERE nombreUsuario = ?";
 
+    // Eliminar un usuario por su nombre
+    String DELETE_PLAYLIST_CANCION_BY_USERID = "DELETE FROM PLAYLIST_CANCION WHERE playlistID IN (SELECT playlistID FROM PLAYLIST WHERE userID = (SELECT userID FROM USUARIO WHERE userID = ?))";
+
+    String DELETE_PLAYLIST_BY_USERID = "DELETE FROM PLAYLIST WHERE userID = ?";
+
+    String DELETE_USER_BY_USERID = "DELETE FROM USUARIO WHERE userID = ?";
+
+
     // Obtener el ID de un usuario por su nombre
     String GET_USER_ID_BY_NAME = "SELECT userID FROM USUARIO WHERE nombreUsuario = ?";
 
@@ -64,6 +72,9 @@ public interface Queryable {
     String COUNT_ALL_SONGS_FROM_AUTHOR = "SELECT COUNT(*) " +
             "FROM CANCION " +
             "WHERE autorID = ?";
+
+    String INSERT_USER = "INSERT INTO USUARIO (nombreUsuario, password, imagen) VALUES (?, ?, ?)";
+
 
     // Sumar el número de canciones que tiene una playlist
     String COUNT_ALL_SONGS_FROM_PLAYLIST = "SELECT COUNT(*) " +

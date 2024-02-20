@@ -182,7 +182,7 @@ VALUES (
         4.5
     ),
     (
-        'La Noche De Los Dos',
+        'MIA',
         '2024-01-26',
         4,
         'imagen_la_noche_de_los_dos.jpg',

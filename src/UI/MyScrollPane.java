@@ -2,6 +2,7 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,6 +15,7 @@ public class MyScrollPane extends JScrollPane {
     private JList<String[]> list;
     private JLabel headerLabel;
     private int mHoveredJListIndex;
+    private JMenuItem opcion1;
 
     public MyScrollPane() {
         listModel = new DefaultListModel<>();
@@ -47,6 +49,9 @@ public class MyScrollPane extends JScrollPane {
                 headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
             }
         });
+
+        opcion1 = new JMenuItem("Borrar de playlist");
+        opcion1.setFont(FontManager.cargarFuente("spotify.otf", 13));
     }
 
     private void setupScrollPane() {
@@ -59,6 +64,16 @@ public class MyScrollPane extends JScrollPane {
     }
 
     private void setupList() {
+        list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) { // Verificar si se ha hecho clic derecho
+                    int index = list.locationToIndex(e.getPoint()); // Obtener el índice del elemento en el que se hizo clic
+                    list.setSelectedIndex(index); // Seleccionar el elemento
+                    mostrarMenuEmergente(e); // Mostrar el menú emergente
+                }
+            }
+        });
         list.addMouseMotionListener(new MouseAdapter() {
                                         public void mouseMoved(MouseEvent me) {
                                             Point p = new Point(me.getX(), me.getY());
@@ -139,5 +154,25 @@ public class MyScrollPane extends JScrollPane {
 
     public void setmHoveredJListIndex(int mHoveredJListIndex) {
         this.mHoveredJListIndex = mHoveredJListIndex;
+    }
+
+    private void mostrarMenuEmergente(MouseEvent e) {
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        popupMenu.add(opcion1);
+
+        popupMenu.show(list, e.getX(), e.getY());
+    }
+    public void deleteSong(ActionListener e){
+        opcion1.addActionListener(e);
+    }
+
+    public String obtenerNombre() {
+        int selectedIndex = list.getSelectedIndex();
+        if (selectedIndex != -1) {
+            String[] selectedData = list.getModel().getElementAt(selectedIndex);
+            return selectedData[1]; // Retorna el nombre de la canción
+        }
+        return null; // No hay ninguna canción seleccionada
     }
 }
