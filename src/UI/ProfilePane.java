@@ -1,16 +1,18 @@
 package UI;
 
-import UI.CustomComponents.CustomButton;
-import UI.CustomComponents.PlaceholderPasswordField;
-import UI.CustomComponents.PlaceholderTextField;
-import UI.CustomComponents.RoundedPanel;
+import UI.CustomComponents.*;
 import Utils.FontManager;
+import Utils.ImageManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ProfilePane extends RoundedPanel {
     private JLabel nameLabel;
@@ -24,6 +26,8 @@ public class ProfilePane extends RoundedPanel {
     private PlaceholderPasswordField password, password2;
     private JButton acceptButton = new MyButton("Aceptar");
     private JButton cancelButton;
+    private MedIconButton image = new MedIconButton("\ue1b6");;
+    private JLabel profileImageLabel;
 
     public ProfilePane(Image img) {
         setLayout(new GridBagLayout());
@@ -51,14 +55,23 @@ public class ProfilePane extends RoundedPanel {
             }
         });
     }
-
+    public void refreshProfileImage(String path) throws IOException {
+        BufferedImage img = ImageIO.read(new File(System.getProperty("user.dir") + "/src/Data/Profile/" + path));
+        Image foto = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        // Crear una nueva instancia de ImageIcon con la nueva imagen
+        profileImageIcon = new ImageIcon(foto);
+        // Actualizar la imagen de la JLabel
+        profileImageLabel.setIcon(profileImageIcon);
+        profileImageLabel.repaint();
+        profileImageLabel.revalidate();
+    }
     private JPanel createTopPanel() {
         // Panel superior para la imagen y detalles del perfil
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Cargar la imagen del perfil
         profileImageIcon = new ImageIcon(img);
-        JLabel profileImageLabel = new JLabel(profileImageIcon);
+        profileImageLabel = new JLabel(profileImageIcon);
         topPanel.add(profileImageLabel, BorderLayout.EAST);
 
         // Panel para los detalles del perfil
@@ -101,10 +114,6 @@ public class ProfilePane extends RoundedPanel {
         descriptionLabel.setText("Playlists: " + description);
     }
 
-    public void setImg(Image img) {
-        this.profileImageIcon = new ImageIcon(img);
-    }
-
     // Método para hacer opacos todos los paneles internos
     public void setOpaquePanels(boolean opaque) {
         for (Component component : getComponents()) {
@@ -138,8 +147,9 @@ public class ProfilePane extends RoundedPanel {
         // Crear el panel de edición
         editPanel = new JPanel();
         editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.Y_AXIS));
-        editPanel.setPreferredSize(new Dimension(100, 150));
+        editPanel.setPreferredSize(new Dimension(100, 180));
         editPanel.setOpaque(false);
+        editPanel.add(image);
 
         // Crear el PlaceholderTextField y los PlaceholderPasswordFields
         user = new PlaceholderTextField(this, "Nuevo Usuario", 15);
@@ -226,6 +236,7 @@ public class ProfilePane extends RoundedPanel {
         JPanel buttonPane = new JPanel();
         buttonPane.setOpaque(false);
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
+        acceptButton.setEnabled(false);
         // Crear los botones
         acceptButton.setPreferredSize(new Dimension(150, 35));
         acceptButton.addActionListener(e -> {
@@ -252,13 +263,17 @@ public class ProfilePane extends RoundedPanel {
         // Agregar el panel de edición debajo del botón
         add(editPanel, gbcEditPanel);
         setFontForAllComponents(FontManager.cargarFuente("spotify-bold.otf", 13f));
-
+        image.setFont(FontManager.cargarFuente("icon.otf", 32));
         // Repintar y volver a validar el contenido del JPanel
         revalidate();
         repaint();
     }
     public void cambiarUsuario(ActionListener e){
         acceptButton.addActionListener(e);
+    }
+    
+    public void cambiarImagen(ActionListener e){
+        image.addActionListener(e);
     }
 
     private boolean checkPasswordsMatch() {

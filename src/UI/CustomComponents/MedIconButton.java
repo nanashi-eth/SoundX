@@ -9,7 +9,8 @@ public class MedIconButton extends IconButton{
         super(iconUnicode);
         setFont(getFont().deriveFont(32f));
         applyHoverEffect();
-        setMinimumSize(new Dimension(40, 40));
+        setMinimumSize(new Dimension(50, 50));
+        setPreferredSize(new Dimension(50, 50));
     }
 
     private void applyHoverEffect() {

@@ -10,9 +10,11 @@ import UI.CustomComponents.RoundedPanel;
 import Utils.ImageManager;
 import Utils.SimpleTimeFormatter;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,8 @@ public class Controller {
     private ScrollPaneSongs songs;
     private JPanel playlistPanel;
     private ProfilePane profilePane;
-    private JPanel currentPlaylist, currentSong, currentProfile;
+    private JPanel currentPlaylist, currentSong;
+    private ProfilePane currentProfile;
     private int currentIndex;
 
     public Controller(SoundXFrame ventana, LoginShadowPanel login) {
@@ -72,6 +75,7 @@ public class Controller {
                 loadUserData();
                 loadSongs();
                 profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
+                profilePane.cambiarImagen(e ->cambiarFoto());
             } else {
                 // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
                 loginShadowPanel.getParentFrame().mostrarError("Usuario o contraseña incorrectos");
@@ -101,6 +105,32 @@ public class Controller {
         } catch (MyException ex) {
             // Manejar la excepción si ocurre algún error al actualizar los datos en la base de datos
             ventana.mostrarError(ex.getMessage());
+        }
+    }
+    
+    public void cambiarFoto(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Elegir nueva imagen de perfil");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Establecer un filtro de extensión de archivo para permitir solo imágenes
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "jpeg", "png", "gif");
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // El usuario ha seleccionado un archivo
+            String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+            try {
+                ImageManager.sobrescribirImagen(imagePath, usuarioActual.getImagen());
+                try {
+                    profilePane.refreshProfileImage(usuarioActual.getImagen());
+                } catch (IOException e) {
+                    ventana.mostrarError("Error al cargar la nueva imagen");
+                }
+            } catch (IOException e) {
+                ventana.mostrarError("Error al guardar la imagen");
+            } 
         }
     }
 
