@@ -37,8 +37,6 @@ public class PlaylistManager extends ResultSetManager implements Queryable{
                 );
                 cancion.setCancionID(rs.getInt("cancionID"));
                 canciones.add(cancion);
-                // Mover al siguiente resultado del ResultSet
-                moveResultSetCursor(rs, ResultSetMovement.NEXT);
             }
         } catch (SQLException ex) {
             handleSQLException(209);
@@ -77,12 +75,12 @@ public class PlaylistManager extends ResultSetManager implements Queryable{
 
     private void updatePlaylistDuration(int playlistID) throws MyException {
         try {
-            PreparedStatement updateStmt = ConnectionDB.getConnection().prepareStatement(Queryable.UPDATE_PLAYLIST_DURATION);
+            PreparedStatement updateStmt = ConnectionDB.getConnection().prepareStatement(UPDATE_PLAYLIST_DURATION);
             updateStmt.setInt(1, playlistID);
             ResultSet playlistResultSet = updateStmt.executeQuery();
             if (playlistResultSet.next()) {
                 float minutosTotales = playlistResultSet.getFloat("minutosTotales");
-                PreparedStatement updatePlaylistStmt = ConnectionDB.getConnection().prepareStatement(Queryable.UPDATE_PLAYLIST_TOTAL_MINUTES);
+                PreparedStatement updatePlaylistStmt = ConnectionDB.getConnection().prepareStatement(UPDATE_PLAYLIST_TOTAL_MINUTES);
                 updatePlaylistStmt.setFloat(1, minutosTotales);
                 updatePlaylistStmt.setInt(2, playlistID);
                 updatePlaylistStmt.executeUpdate();

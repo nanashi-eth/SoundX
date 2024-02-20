@@ -4,6 +4,9 @@ public interface Queryable {
 
     // Todos los usuarios
     String GET_ALL_USERS = "SELECT * FROM USUARIO";
+    // Actualizar el nombre y la contraseña de un usuario por su ID
+    String UPDATE_USER_BY_ID = "UPDATE USUARIO SET nombreUsuario = ?, password = ? WHERE userID = ?";
+
 
     // Obtener usuario por nombre
     String GET_USER_BY_NAME = "SELECT * FROM USUARIO WHERE nombreUsuario = ?";

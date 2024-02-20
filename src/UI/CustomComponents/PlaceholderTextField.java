@@ -1,5 +1,7 @@
 package UI.CustomComponents;
 
+import Utils.FontManager;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -10,23 +12,19 @@ import java.awt.event.FocusListener;
 public class PlaceholderTextField extends JTextField {
     private String placeholder;
     private final JLabel iconLabel;
-    private Font font;
+    private Font font = FontManager.cargarFuente("spotify.otf", 13f);
+    private Font icon = FontManager.cargarFuente("icon.otf", 15f);
     private Color containerBackground;
 
     public PlaceholderTextField(Container parent, String text, int columns) {
         super(columns);
-//        initializeFont();
         this.placeholder = text;
         this.iconLabel = new JLabel();
-        this.iconLabel.setFont(font);
-
+        this.iconLabel.setFont(icon);
+        setFont(font);
         setupUI(parent);
         setupEventListeners();
     }
-
-//    private void initializeFont() {
-//        font = Utils.FontManager.getCustomIconFont().deriveFont(Font.PLAIN, 13);
-//    }
 
     private void setupUI(Container parent) {
         setLayout(new BorderLayout());
@@ -108,10 +106,15 @@ public class PlaceholderTextField extends JTextField {
         repaint(); // Es posible que necesites repintar el componente para que los cambios sean visibles
     }
 
+    public void search() {
+        iconLabel.setText("\uf002");
+        iconLabel.setForeground(new Color(167, 167, 167));
+    }
+
     public void valid() {
-        this.iconLabel.setFont(font);
+        this.iconLabel.setFont(icon);
         iconLabel.setText("\uf14a");
-        iconLabel.setForeground(new Color(255, 255, 255));
+        iconLabel.setForeground(new Color(167, 167, 167));
     }
 
     public void invalid() {

@@ -26,6 +26,11 @@ public class SoundXFrame extends JFrame {
         UIManager.put( "TitlePane.foreground", new ColorUIResource(255, 255, 255) );
         UIManager.put( "TitlePane.background", new ColorUIResource(0, 0, 0) );
         UIManager.put( "TitlePane.centerTitle", true );
+        UIManager.put( "OptionPane.background", new ColorUIResource(22, 22, 22) );
+        UIManager.put( "OptionPane.foreground", new ColorUIResource(255, 255, 255) );
+        UIManager.put( "OptionPane.arc", 10 );
+        UIManager.put("OptionPane.titlePane.foreground", new ColorUIResource(255, 255, 255));
+        UIManager.put("OptionPane.border.arc", 10);
         UIManager.put( "TitlePane.font", FontManager.cargarFuente("spotify-bold.otf", 13f));
         UIManager.put( "Button.default.focusedBorderColor", new ColorUIResource(255, 255, 255) );
         UIManager.put( "MenuBar.selectionBackground", new ColorUIResource(22, 22, 22));
@@ -72,6 +77,35 @@ public class SoundXFrame extends JFrame {
         revalidate();
         repaint();
     }
+
+    public void showLoginPanel() {
+        // Eliminar cualquier componente existente en el contenido principal
+        getContentPane().removeAll();
+
+        // Crear un nuevo panel de inicio de sesión
+        LoginShadowPanel loginPanel = new LoginShadowPanel(this);
+
+        // Configurar el tamaño del panel y agregarlo al centro del JFrame
+        loginPanel.setPreferredSize(new Dimension(260, 410)); // Tamaño fijo del panel
+        Image image = ImageManager.cargarImagen("background.jpg", getWidth(), getHeight());
+
+        // Crear el panel con la imagen dividida
+        ImageBackgroundPanel diagonalImagePanel = new ImageBackgroundPanel(image);
+        diagonalImagePanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        setContentPane(diagonalImagePanel);
+        getContentPane().add(loginPanel, gbc);
+
+        // Establecer el controlador para el nuevo panel de inicio de sesión
+        control = new Controller(this, loginPanel);
+
+        // Repintar y volver a validar el contenido del JFrame
+        revalidate();
+        repaint();
+    }
+
 
     // Método para mostrar un mensaje de información
     public void mostrarMensaje(String mensaje) {

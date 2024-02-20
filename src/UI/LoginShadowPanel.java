@@ -52,7 +52,7 @@ public class LoginShadowPanel extends RoundedShadowPanel {
         fieldsPanel.add(usernameField, gbc);
 
         // Agregar el campo de contraseña al panel de campos
-        passwordField = new PlaceholderPasswordField(this, 15);
+        passwordField = new PlaceholderPasswordField(this, 15, "Contraseña");
         passwordField.setFont(text);
         gbc.gridy++;
         fieldsPanel.add(passwordField, gbc);

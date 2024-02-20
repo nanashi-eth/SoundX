@@ -6,11 +6,11 @@ import Modelo.Cancion;
 import Modelo.Playlist;
 import Modelo.Usuario;
 import UI.*;
+import UI.CustomComponents.RoundedPanel;
 import Utils.ImageManager;
 import Utils.SimpleTimeFormatter;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -26,7 +26,8 @@ public class Controller {
     private PlaylistPane playlistPane;
     private ScrollPaneSongs songs;
     private JPanel playlistPanel;
-    private ProfilePane profilePane; 
+    private ProfilePane profilePane;
+    private JPanel currentPlaylist, currentSong, currentProfile;
     private int currentIndex;
 
     public Controller(SoundXFrame ventana, LoginShadowPanel login) {
@@ -39,6 +40,11 @@ public class Controller {
             public void windowClosing(WindowEvent e) {
                 ErrorLogger.getInstance().generateErrorReport(System.getProperty("user.dir") + "/src/Data/Log.txt");
                 ventana.dispose();
+                try {
+                    ConnectionDB.cerrarConexion();
+                } catch (MyException ex) {
+                    ventana.mostrarError(ex.getMessage());
+                }
             }
         });
     }
@@ -55,6 +61,7 @@ public class Controller {
             if (isValid) {
                 // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
                 loginShadowPanel.getParentFrame().mostrarMensaje("Inicio de sesión exitoso");
+                // Actualizar los datos del usuario actual
                 usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
                 usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
                 usuarioActual.setUserID(userManager.getUserIdByName(usuarioActual.getNombreUsuario()));
@@ -64,6 +71,7 @@ public class Controller {
                 profilePane.setName(usuarioActual.getNombreUsuario());
                 loadUserData();
                 loadSongs();
+                profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
             } else {
                 // Si la validación falla, puedes mostrar un mensaje de error o tomar otras medidas
                 loginShadowPanel.getParentFrame().mostrarError("Usuario o contraseña incorrectos");
@@ -72,6 +80,31 @@ public class Controller {
             loginShadowPanel.getParentFrame().mostrarError(ex.getMessage());
         }        
     }
+
+    public void updateUserData(String newUsername, String newPassword) {
+        // Actualizar los datos del usuario actual
+        usuarioActual.setNombreUsuario(newUsername.toLowerCase().trim());
+        usuarioActual.setPassword(newPassword.toLowerCase().trim());
+    }
+
+    public void updateUserInDatabase(String newUsername, String newPassword) {
+        try {
+            Usuario temp = new Usuario(newUsername, newPassword);
+            temp.setUserID(usuarioActual.getUserID());
+            // Crear una instancia de UserManager
+            UserManager userManager = new UserManager();
+
+            // Llamar al método updateUserAttributes con los datos del usuario actual
+            userManager.updateUsuario(temp);
+            updateUserData(temp.getNombreUsuario(), temp.getPassword());
+            profilePane.setName(newUsername);
+        } catch (MyException ex) {
+            // Manejar la excepción si ocurre algún error al actualizar los datos en la base de datos
+            ventana.mostrarError(ex.getMessage());
+        }
+    }
+
+    
 
     public void loadSongs(){
         try {
@@ -100,8 +133,10 @@ public class Controller {
                     }
                 }
                 profilePane.setTotalPlaylists(String.valueOf(playlists.size()));
+                currentProfile = profilePane;
                 currentIndex = playlists.size() - 1;
                 playlistPane = vistaPlaylist.getPlaylistPane();
+                currentPlaylist = (JPanel) vistaPlaylist.getRightComponent();
                 playlistPane.setFirst(e -> {
                     currentIndex = 0;
                     updatePlaylist();
@@ -130,20 +165,27 @@ public class Controller {
         sideBar.playlistDist(e ->playlist());
         sideBar.songDist(e -> songsDist());
         sideBar.acercaDe(e ->{ new AboutDialog(ventana).setVisible(true);});
+        sideBar.logout(e -> logout());
     }
 
     private void songsDist() {
-        vistaPlaylist.setRightComponent(songs);
+        RoundedPanel back = new RoundedPanel();
+        back.add(songs);
+        currentSong = back;
+        vistaPlaylist.setDividerLocation(200);
+        vistaPlaylist.setRightComponent(currentSong);
     }
 
     public void playlist() {
-        vistaPlaylist.setRightComponent(playlistPanel);
+        vistaPlaylist.setDividerLocation(200);
+        vistaPlaylist.setRightComponent(currentPlaylist);
     }
 
     public void profile(){
         playlistPanel = (JPanel) vistaPlaylist.getRightComponent();
+        vistaPlaylist.setDividerLocation(200);
         playlistPanel.setPreferredSize(new Dimension(600, playlistPanel.getHeight()));
-        vistaPlaylist.setRightComponent(profilePane);
+        vistaPlaylist.setRightComponent(currentProfile);
     }
     
     public void updatePlaylist(){
@@ -165,6 +207,19 @@ public class Controller {
             songs.addElement(actual);
         }
     }
-    
+
+
+    public void logout() {
+        // Limpiar datos del usuario actual
+        usuarioActual = new Usuario();
+        playlists.clear();
+        allSongs.clear();
+        ventana.showLoginPanel();
+        try {
+            ConnectionDB.cerrarConexion();
+        } catch (MyException e) {
+            ventana.mostrarError(e.getMessage());
+        }
+    }
     
 }

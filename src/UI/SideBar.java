@@ -13,18 +13,21 @@ import java.awt.event.ActionListener;
 public class SideBar extends RoundedPanel {
     private Font icon = FontManager.cargarFuente("icon.otf", 18f);
     private JButton button1,button2,button3,bottomButton;
+    private JMenu menu;
+    private JMenuItem menuItem1, menuItem2;
+    private CustomMenuBar menuBar;
     public SideBar() {
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new BorderLayout());
 
         // Agrega el menú en la parte superior
-        CustomMenuBar menuBar = new CustomMenuBar();
-        JMenu menu = new JMenu("\uf0c9");
+        menuBar = new CustomMenuBar();
+        menu = new JMenu("\uf0c9");
         menu.setOpaque(false);
         menu.setForeground(Color.WHITE);
         menu.setFont(icon);
-        JMenuItem menuItem1 = new JMenuItem("Cerrar Sesion");
-        JMenuItem menuItem2 = new JMenuItem("Borrar Usuario");
+        menuItem1 = new JMenuItem("Cerrar Sesion");
+        menuItem2 = new JMenuItem("Borrar Usuario");
         menu.add(menuItem1);
         menu.add(menuItem2);
         menuBar.add(Box.createHorizontalStrut(8));
@@ -68,6 +71,7 @@ public class SideBar extends RoundedPanel {
     public void acercaDe (ActionListener e){
         bottomButton.addActionListener(e);
     }
+    public void logout(ActionListener e){menuItem1.addActionListener(e);}
 
     private void saludar() {
         System.out.println("Hola");

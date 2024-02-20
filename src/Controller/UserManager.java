@@ -108,12 +108,28 @@ public class UserManager extends ResultSetManager implements Queryable {
 
     public void updateUsuario(Usuario user) throws MyException {
         try {
-            rs.updateString("nombreUsuario", user.getNombreUsuario());
-            rs.updateString("password", user.getPassword());
-            rs.updateRow();
-            ConnectionDB.getConnection().commit();
+            // Verificar si el nombre de usuario ya existe
+            if (usernameExists(user.getNombreUsuario())) {
+                throw new MyException(207); // Código de error para nombre de usuario duplicado
+            }
+
+            // Preparar la declaración de actualización
+            PreparedStatement updateStmt = ConnectionDB.getConnection().prepareStatement(UPDATE_USER_BY_ID);
+            updateStmt.setString(1, user.getNombreUsuario()); // Setear el nuevo nombre de usuario
+            updateStmt.setString(2, user.getPassword()); // Setear la nueva contraseña
+            updateStmt.setInt(3, user.getUserID()); // Setear el ID del usuario para la condición WHERE
+
+            // Ejecutar la actualización
+            int rowsAffected = updateStmt.executeUpdate();
+
+            // Verificar si se actualizó correctamente al menos una fila
+            if (rowsAffected > 0) {
+                ConnectionDB.getConnection().commit(); // Confirmar los cambios en la base de datos
+            } else {
+                throw new MyException(207); // Lanzar una excepción si no se actualizó ninguna fila (usuario no encontrado)
+            }
         } catch (SQLException ex) {
-            handleSQLException(207);
+            handleSQLException(207); // Manejar la excepción SQL
         }
     }
 

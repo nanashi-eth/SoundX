@@ -1,6 +1,7 @@
 package UI.CustomComponents;
 
 import UI.ScrollPaneSongs;
+import Utils.FontManager;
 import Utils.ImageManager;
 
 import javax.swing.*;
@@ -40,6 +41,8 @@ public class CustomCellRenderer1 extends DefaultListCellRenderer {
         Image img = ImageManager.cargarCover(data[0]);
         ImageIcon icon = new ImageIcon(img);
         label.setIcon(icon);
+        label.setFont(FontManager.cargarFuente("spotify-bold.otf", 13f));
+        label.setForeground(new Color(167, 167, 167));
         label.setIconTextGap(85);
         label.setHorizontalAlignment(SwingConstants.LEFT);
         label.setBorder(BorderFactory.createEmptyBorder(padding, 10, padding, padding));

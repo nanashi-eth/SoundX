@@ -19,7 +19,7 @@ public class PlaylistPane extends RoundedPanel {
     private JLabel duracion;
     public PlaylistPane() {
         setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
+        setBorder(BorderFactory.createEmptyBorder(25,0,20,0));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10);
         gbc.gridx = 0;

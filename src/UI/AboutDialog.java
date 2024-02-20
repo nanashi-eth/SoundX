@@ -24,7 +24,7 @@ public class AboutDialog extends JDialog {
         JLabel authorsLabel = new JLabel("Autores:");
         authorsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(authorsLabel);
-        JLabel author2Label = new JLabel("Jesus Rodriguez");
+        JLabel author2Label = new JLabel("Jesus Martinez");
         author2Label.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(author2Label);
         JLabel author1Label = new JLabel("Jose Benitez");

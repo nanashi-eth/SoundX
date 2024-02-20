@@ -27,7 +27,7 @@ public class SoundX {
             } catch (MyException e) {
                 ErrorLogger.getInstance().logError(AppErrors.DATABASE_OPEN_ERROR);
                 ventana.mostrarError(e.getMessage());
-            } 
+            }
         });
     }
 }

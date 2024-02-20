@@ -1,5 +1,7 @@
 package UI.CustomComponents;
 
+import Utils.FontManager;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -11,10 +13,14 @@ public class PlaceholderPasswordField extends JPasswordField {
     private String placeholder;
     private Font font;
     private Color containerBackground;
+    private JLabel iconLabel;
+    private Font icon = FontManager.cargarFuente("icon.otf", 15f);
 
-    public PlaceholderPasswordField(Container parent, int columns) {
+    public PlaceholderPasswordField(Container parent, int columns, String placeholder) {
         super(columns);
-        this.placeholder = "Password";
+        this.placeholder = placeholder;
+        this.iconLabel = new JLabel();
+        this.iconLabel.setFont(icon);
         setupUI(parent);
         setupEventListeners();
     }
@@ -22,6 +28,7 @@ public class PlaceholderPasswordField extends JPasswordField {
     private void setupUI(Container parent) {
         setLayout(new BorderLayout());
         setOpaque(false);
+        add(iconLabel, BorderLayout.EAST);
 
         // Eliminar el borde redondeado y utilizar una línea sólida en la parte inferior
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE));
@@ -100,6 +107,19 @@ public class PlaceholderPasswordField extends JPasswordField {
         setText(placeholder);
         if (!hasFocus()) {
             setForeground(Color.GRAY);
+        }
+    }
+
+    public void valid() {
+        this.iconLabel.setFont(icon);
+        iconLabel.setText("\uf14a");
+        iconLabel.setForeground(new Color(167, 167, 167));
+    }
+
+    public void invalid() {
+        iconLabel.setText("");
+        if (!placeholder.equals(getText())) {
+            setForeground(new Color(204, 0, 0));
         }
     }
 
