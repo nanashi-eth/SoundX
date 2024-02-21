@@ -1,2 +1,5 @@
-Informe de Errores - 2024-02-21T00:18:01.147427500
+Informe de Errores - 2024-02-21T01:30:47.263219500
+
+Código de Error: 102
+Mensaje de Error: Error 102: al abrir la base de datos
 

@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class ImageManager {
     private static HashMap<String, BufferedImage> images = new HashMap<>();
-    private static final String DEFAULT_IMAGE_PATH = "default.jpg";
+    public static final String DEFAULT_IMAGE_PATH = "default.jpg";
 
     public static Image cargarImagen(String rutaImagen, int width, int height) {
         rutaImagen = System.getProperty("user.dir") + "/src/assets/images/" + rutaImagen;
@@ -37,7 +37,7 @@ public class ImageManager {
                 images.put(rutaImagen, img);
                 return img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             } catch (IOException e) {
-                return cargarImagen(DEFAULT_IMAGE_PATH, width, height);
+                return null;
             }
         }
     }

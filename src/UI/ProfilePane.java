@@ -31,7 +31,11 @@ public class ProfilePane extends RoundedPanel {
 
     public ProfilePane(Image img) {
         setLayout(new GridBagLayout());
+        if (img == null) {
+            img = ImageManager.cargarImagen(ImageManager.DEFAULT_IMAGE_PATH, 100, 100);
+        }
         this.img = img;
+        
 
         // Restricciones para el panel superior (imagen y detalles del perfil)
         GridBagConstraints gbcTopPanel = new GridBagConstraints();

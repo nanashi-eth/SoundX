@@ -65,6 +65,8 @@ public class Controller {
             // Si la validación es exitosa, puedes realizar acciones adicionales aquí
             if (isValid) {
                 loginShadowPanel.getParentFrame().mostrarMensaje("Inicio de sesión exitoso");
+                usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
+                usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
                 usuarioActual.setUserID(userManager.getUserIdByName(usuarioActual.getNombreUsuario()));
                 usuarioActual.setImagen(userManager.getUserImgByName(usuarioActual.getNombreUsuario()));
                 setView();
@@ -86,8 +88,6 @@ public class Controller {
     public void setView(){
         // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
         // Actualizar los datos del usuario actual
-        usuarioActual.setNombreUsuario(loginShadowPanel.getUsername().toLowerCase().trim());
-        usuarioActual.setPassword(loginShadowPanel.getPassword().toLowerCase().trim());
         ventana.changePanel();
         profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getImagen(), 100, 100, false));
         profilePane.setName(usuarioActual.getNombreUsuario());
