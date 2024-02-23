@@ -4,6 +4,7 @@ import Exceptions.AppErrors;
 import Exceptions.ErrorLogger;
 import Exceptions.MyException;
 import UI.SoundXFrame;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme;
 
@@ -15,7 +16,7 @@ public class SoundX {
         SwingUtilities.invokeLater(() -> {
             FlatLightLaf.setup();
             try {
-                UIManager.setLookAndFeel(new FlatGitHubDarkIJTheme());
+                UIManager.setLookAndFeel(new FlatDarculaLaf());
             } catch (Exception ex) {
                 System.err.println("Failed to initialize LaF");
             }

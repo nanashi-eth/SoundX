@@ -89,9 +89,11 @@ public class Controller {
         // Por ejemplo, mostrar un mensaje de éxito o cambiar a otra ventana
         // Actualizar los datos del usuario actual
         ventana.changePanel();
-        profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getImagen(), 100, 100, false));
+        profilePane = new ProfilePane(ImageManager.cargarImagen(usuarioActual.getUserID() + ".jpg", 100, 100, false));
         profilePane.setName(usuarioActual.getNombreUsuario());
         loadSongs();
+        profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
+        profilePane.cambiarImagen(e ->cambiarFoto());
         loadUserData();
         profilePane.cambiarUsuario(e ->updateUserInDatabase(profilePane.getUsername(), profilePane.getPassword()));
         profilePane.cambiarImagen(e ->cambiarFoto());
@@ -265,6 +267,10 @@ public class Controller {
     public void addSong(){
         String name = this.songs.obtenerNombre();
         Cancion cancion = obtenerCancionPorNombre(allSongs, name);
+        System.out.println(name);
+        System.out.println(cancion.getCancionID());
+        System.out.println(playlists.get(currentIndex).getPlaylistID());
+        System.out.println(playlists.get(currentIndex).getCanciones().size());
         if (obtenerCancionPorNombre(playlists.get(currentIndex).getCanciones(), name) != null) {
             ventana.mostrarError("Esa cancion ya pertenece a la playlist");
             return;
@@ -272,8 +278,7 @@ public class Controller {
         PlaylistManager playlistManager = new PlaylistManager();
         try {
             float nuevosMin = playlists.get(currentIndex).getMinutosTotales() + cancion.getDuracion();
-            playlistManager.agregarCancionAPlaylist(cancion.getCancionID(), playlists.get(currentIndex).getPlaylistID(),  playlists.get(currentIndex).getMinutosTotales());
-            System.out.println(name);
+            playlistManager.agregarCancionAPlaylist(playlists.get(currentIndex).getPlaylistID(), cancion.getCancionID(),  nuevosMin);
             playlists.get(currentIndex).getCanciones().add(cancion);
             playlists.get(currentIndex).setMinutosTotales(nuevosMin);
             updatePlaylist();
@@ -292,7 +297,7 @@ public class Controller {
         PlaylistManager playlistManager = new PlaylistManager();
         try {
             float nuevosMin = playlists.get(currentIndex).getMinutosTotales() - cancion.getDuracion();
-            playlistManager.eliminarCancionDePlaylist(cancion.getCancionID(), playlists.get(currentIndex).getPlaylistID(),  playlists.get(currentIndex).getMinutosTotales());
+            playlistManager.eliminarCancionDePlaylist(playlists.get(currentIndex).getPlaylistID(), cancion.getCancionID(),  nuevosMin);
             playlists.get(currentIndex).getCanciones().remove(cancion);
             playlists.get(currentIndex).setMinutosTotales(nuevosMin);
             updatePlaylist();

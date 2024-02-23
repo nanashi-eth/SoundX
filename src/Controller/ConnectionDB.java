@@ -10,7 +10,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import java.sql.*;
 
 public class ConnectionDB {
-    private static final String URL = "jdbc:mysql://172.25.188.75:3306/practica06";
+    private static final String URL = "jdbc:mysql://localhost:3306/practica06";
     private static final String USER = "admin";
     private static final String PASSWORD = "password";
     

@@ -106,7 +106,7 @@ public class PlaylistManager extends ResultSetManager implements Queryable{
             updatePlaylistStmt.setFloat(1, nuevosMinutosTotales);
             updatePlaylistStmt.setInt(2, playlistID);
             updatePlaylistStmt.executeUpdate();
-
+            
             ConnectionDB.cerrarConexion();
         } catch (SQLException ex) {
             handleSQLException(210); // Manejar la excepción adecuadamente
